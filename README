@@ -1,0 +1,34 @@
+
+Zeff's Extremely Scalable Minecraft Implementation
+
+
+With this project I'm aiming to develop a distributed minecraft implementation like a load balanced website.  One machine takes a request and routes though to controllers who route to data processor who formulates response and passes back to the connection handler.
+
+Intending to make the controllers and child the same process except in configuration if there are any children configured the process becomes a master instead, if there are no children the master also acts as a child.
+
+Splitting the service into multiple processes like this will take better advantage of multicore cpus and allow for scaling to cloud computers in very large instances.  The bottleneck is likely to be interprocess communication though expect that in a cloud environment you would add gigabit interfaces to connect directly to important systems to a node. Also any packet payload should not be decompressed until it's going to be handled.
+
+
+
+INSTALLATION
+
+
+Seriously.  This project isn't anywhere near ready for installation however if you wanted to tinker around with it:
+Compile all sources into a shared library except UnitTests.cpp.
+
+UnitTests.cpp compiles on its own and links to the dll.
+
+
+
+
+CONTRIBUTE
+
+If you'd like to work on a minecraft implementation please take a fork and feel free to submit pull requests. I'll review all pull requests as soon as possible.
+
+
+
+LICENSING ISSUES
+
+I'm unaware of any legal reason I wouldn't be able to implement a completely independant minecraft server.  I have not copied any source directly from minecraft_server or bukkit and am so far using only Wiki information for the Minecraft MP protocol.
+
+However, Notch my friend, I hope you understand.. This is not to take away from you, infact I hope it helps.  I fully intend to support serverlist and player verification as minecraft_server does.
