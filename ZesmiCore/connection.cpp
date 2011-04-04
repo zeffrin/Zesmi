@@ -80,14 +80,19 @@ Connection::Connection(char *port)
 
 Connection::~Connection()
 {
-#ifdef TARGET_OS_MAC
-    #error "TODO sockets lib for osx"
-#elif defined __linux__
-    #error "TODO sockets for linux"
-#elif defined _WIN32 || defined _WIN64
-    closesocket(sock);
-#endif
-    _connstate = CLOSED;
+    if(_connstate != CLOSED)
+    {
+        #ifdef TARGET_OS_MAC
+            #error "TODO sockets lib for osx"
+        #elif defined __linux__
+            #error "TODO sockets for linux"
+        #elif defined _WIN32 || defined _WIN64
+            closesocket(sock);
+        #endif
+
+        _connstate = CLOSED;
+
+    }
 
 }
 
