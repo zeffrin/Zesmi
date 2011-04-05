@@ -10,6 +10,7 @@ int main(void)
     Initialize *init = new Initialize();
     bool result = init->doInitialization();
     Logger *log = Logger::getInstance();
+    Connection *PlayerListener;
 
     if(!result)
     {
@@ -17,7 +18,7 @@ int main(void)
     }
 
     ConnectionController *conns = ConnectionController::getInstance();
-    if(conns->startListen("1022"))
+    if(PlayerListener = conns->startListen("1022"))
     {
         log->writeToLog("Listening on PORT 1022");
     }
@@ -36,6 +37,10 @@ int main(void)
         //conns->doRouting();
         //conns->doSend();
     }
+
+    conns->stopListen(PlayerListener);
+    delete PlayerListener;
+
 
     delete log;
     delete conns;
