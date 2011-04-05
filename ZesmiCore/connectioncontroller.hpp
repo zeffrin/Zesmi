@@ -15,9 +15,9 @@ using namespace std;
 class ConnectionController
 {
     public:
-        ConnectionController();
-        ~ConnectionController();
-        void startListen(char *port);
+
+        static ConnectionController *getInstance();
+        Connection* startListen(char *port);
         void stopListen(Connection *conn);
         //Connection* connect(short int *port);
         void doSelect();
@@ -27,7 +27,13 @@ class ConnectionController
         void doError();
         void doRouting();
 
+        ~ConnectionController();
+
     protected:
+        ConnectionController();
+
+        static ConnectionController *_instance;
+
         list<Connection*> _connections;
         list<Connection*> _listenconns;
 

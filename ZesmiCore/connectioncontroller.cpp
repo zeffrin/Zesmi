@@ -1,6 +1,8 @@
 
 #include "connectioncontroller.hpp"
 
+ConnectionController* ConnectionController::_instance = NULL;
+
 ConnectionController::ConnectionController()
 {
 
@@ -25,15 +27,25 @@ ConnectionController::~ConnectionController()
     }
 }
 
-void ConnectionController::startListen(char *port)
+ConnectionController* ConnectionController::getInstance()
+{
+    if(_instance)
+        return _instance;
+    _instance = new ConnectionController();
+    return _instance;
+
+}
+
+Connection* ConnectionController::startListen(char *port)
 {
     Connection *c = new Connection(port);
     if(!c)
     {
         // TODO: send to logger
-        return;
+        return NULL;
     }
     _listenconns.push_back(c);
+    return c;
 }
 
 void ConnectionController::stopListen(Connection *conn)
@@ -64,7 +76,7 @@ void ConnectionController::doSelect()
         FD_SET((*it)->getSocket(), &_fd_readyforrecv);
     }
 
-    int result = select(NULL, &_fd_readyforrecv, &_fd_readyforsend, &_fd_error, 0);
+    int result = select(NULL, &_fd_readyforrecv, &_fd_readyforsend, &_fd_error, NULL);
     if(!result || result == SOCKET_ERROR)
     {
         //TODO send error to logger

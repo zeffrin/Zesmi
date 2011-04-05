@@ -2,19 +2,29 @@
 #ifndef LOGGER_HPP_INCLUDED
 #define LOGGER_HPP_INCLUDED
 
-#include "connection.hpp"
+#include "connectioncontroller.hpp"
 
 /* Logs process data to the central registrar and local filesystem */
+/* Use getInstance() to get ptr to singleton and connect() to provide */
+/* connection to other host */
+
 
 class Logger
 {
     public:
-        Logger();  // when logger is on this machine
-        Logger(char *loggerhost)  // otherwise logger host
-        ~Logger();
+
+       static Logger* getInstance();
+
+        void writeToLog(char *msg);
+         bool connect(Connection *connection);
+        ~Logger();  // otherwise logger host
+
 
     private:
-        Connection conn;
-}
+        Connection *_conn;
+        Logger();  // when logger is on this machine
+
+        static Logger *_instance;
+};
 
 #endif

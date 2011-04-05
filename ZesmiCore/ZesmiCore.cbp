@@ -108,6 +108,7 @@
 			<Option target="Release" />
 			<Option target="Debug" />
 		</Unit>
+		<Unit filename="logger.cpp" />
 		<Unit filename="logger.hpp">
 			<Option target="Release" />
 			<Option target="Debug" />
