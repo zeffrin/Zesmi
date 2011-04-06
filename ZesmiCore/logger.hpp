@@ -2,6 +2,8 @@
 #ifndef LOGGER_HPP_INCLUDED
 #define LOGGER_HPP_INCLUDED
 
+#include <stdio.h>
+
 #include "connectioncontroller.hpp"
 
 /* Logs process data to the central registrar and local filesystem */
@@ -25,6 +27,7 @@ class Logger
         Logger();  // when logger is on this machine
 
         static Logger *_instance;
+        FILE *_logfile;
 };
 
 #endif

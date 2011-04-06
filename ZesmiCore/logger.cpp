@@ -1,29 +1,39 @@
 
 #include "logger.hpp"
-#include "stdio.h"
+
+#define LOGFILE "server.log" //TODO move to central config
 
 Logger* Logger::_instance = NULL;
 
 Logger::Logger()
 {
     _conn = NULL;
+    _logfile = fopen(LOGFILE, "w");
+    if(_logfile)
+    {
+        writeToLog("Logging to file: " LOGFILE);
+    }
+    else
+    {
+        writeToLog("LOGGER: ERROR unable to open " LOGFILE " for writing.\n");
+    }
 }
 
 Logger::~Logger()
 {
-
+    fclose(_logfile);
 }
 
 bool Logger::connect(Connection *connection)
 {
 
     if(_conn) {
-        printf("LOGGER: Logger::Initialize need only be called once\n");
+        writeToLog("LOGGER: Logger::Initialize need only be called once\n");
         return false;
     }
     if(!connection)
     {
-        printf("LOGGER: Logger:Initialize passed null value\n");
+        writeToLog("LOGGER: Logger:Initialize passed null value\n");
         return false;
     }
     _conn = connection;
@@ -46,6 +56,10 @@ void Logger::writeToLog(char *msg)
     if(_conn)
     {
         // send packet to logger
+    }
+    if(_logfile)
+    {
+        fprintf(_logfile, "%s", msg);
     }
     return;
 }

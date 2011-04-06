@@ -172,3 +172,61 @@
 	"logger.hpp"
 	"connectioncontroller.hpp"
 
+1302047106 source:c:\users\bens\zesmi\zesmicore\connection.cpp
+	<stdio.h>
+	"connection.hpp"
+
+1302047106 c:\users\bens\zesmi\zesmicore\connection.hpp
+	<sys/types.h>
+	<sys/socket.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<list>
+	"block.hpp"
+	"packet.hpp"
+
+1302047106 c:\users\bens\zesmi\zesmicore\block.hpp
+
+1302047106 c:\users\bens\zesmi\zesmicore\packet.hpp
+
+1302047106 source:c:\users\bens\zesmi\zesmicore\connectioncontroller.cpp
+	"connectioncontroller.hpp"
+
+1302047106 c:\users\bens\zesmi\zesmicore\connectioncontroller.hpp
+	<list>
+	"connection.hpp"
+
+1302047106 source:c:\users\bens\zesmi\zesmicore\initialize.cpp
+	"initialize.hpp"
+
+1302047106 c:\users\bens\zesmi\zesmicore\initialize.hpp
+	<sys/types.h>
+	<sys/socket.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+
+1302047106 source:c:\users\bens\zesmi\zesmicore\living.cpp
+	"living.hpp"
+
+1302047106 c:\users\bens\zesmi\zesmicore\living.hpp
+
+1302048488 source:c:\users\bens\zesmi\zesmicore\logger.cpp
+	"logger.hpp"
+
+1302048455 c:\users\bens\zesmi\zesmicore\logger.hpp
+	<stdio.h>
+	"connectioncontroller.hpp"
+
+1302047106 source:c:\users\bens\zesmi\zesmicore\packet.cpp
+	"packet.hpp"
+
+1302047106 source:c:\users\bens\zesmi\zesmicore\player.cpp
+	"player.hpp"
+
+1302047106 c:\users\bens\zesmi\zesmicore\player.hpp
+	"living.hpp"
+	"connection.hpp"
+
+1302047106 source:c:\users\bens\zesmi\zesmicore\block.cpp
+	"block.hpp"
+
