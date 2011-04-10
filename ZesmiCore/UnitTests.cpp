@@ -18,7 +18,7 @@ int main(void)
     }
 
     ConnectionController *conns = ConnectionController::getInstance();
-    if(PlayerListener = conns->startListen("1022"))
+    if((PlayerListener = conns->startListen("1022")))
     {
         log->writeToLog("Listening on PORT 1022");
     }

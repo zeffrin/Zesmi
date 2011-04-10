@@ -9,7 +9,6 @@
 
    */
 
-
 #define _WIN32_WINNT 0x501
 
 #ifdef TARGET_OS_MAC
@@ -28,6 +27,7 @@
 
 #include "block.hpp"
 #include "packet.hpp"
+
 
 using namespace std;
 

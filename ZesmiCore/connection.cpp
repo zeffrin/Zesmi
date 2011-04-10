@@ -2,11 +2,15 @@
 
 #include <stdio.h>
 #include "connection.hpp"
+#include "logger.hpp"
+
+static Logger::Logger *log = Logger::getInstance();
 
 Connection::Connection(char *hostname, char *port)
 {
 
     _connstate = OPEN;
+
 }
 
 Connection::Connection(char *port)
@@ -33,21 +37,18 @@ Connection::Connection(char *port)
     int iresult = getaddrinfo(NULL, port, &hints, &result);
     if(iresult != 0)
     {
-        // TODO: send error to logger
-        // TODO: set connectionstate on this object
+        log->writeToLog("Unable to resolve localaddress and port\n");
+        _connstate = CONNERROR;
     }
     else
     {
-
-
-        // argh seg fault here why
 
         sock = INVALID_SOCKET;
         sock = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
 
         if(sock == INVALID_SOCKET)
         {
-            // TODO: send error to logger
+            log->writeToLog("Error: Invalid socket.\n");
             freeaddrinfo(result);
             _connstate = CONNERROR;
         }
@@ -55,7 +56,7 @@ Connection::Connection(char *port)
         iresult = bind(sock, result->ai_addr, (int)result->ai_addrlen);
         if(iresult == SOCKET_ERROR)
         {
-            //TODO : send error to logger
+            log->writeToLog("Error: Unable to bind to port.\n");
             freeaddrinfo(result);
             closesocket(sock);
             _connstate = CONNERROR;
@@ -70,6 +71,7 @@ Connection::Connection(char *port)
             _connstate = LISTEN;
             listen(sock, 5);
         }
+        log->writeToLog("Listening on Port x.\n");
     }
 
 #else
@@ -123,6 +125,7 @@ SOCKET Connection::doAccept()
     if(!t)
     {
         _connstate = CONNERROR;
+        log->writeToLog("Error while accepting connection\n");
         return NULL;
     }
     _connstate = OPEN;
@@ -149,7 +152,7 @@ void Connection::doRecv()
         int i = recv(sock, buf, 256, MSG_PEEK);
         if(i <= 0)
         {
-            // TODO send to logger
+            log->writeToLog("Error reading in doRecv goagain loop\n");
         }
         if ( i > RECV_BUF )
         {
@@ -160,7 +163,8 @@ void Connection::doRecv()
 
         // translate stream into Packets and store in connection
 
-        Packet *p = new Packet();
+        //Packet *p = new Packet();
+
 
         // store left over peices in _sockbuf
 

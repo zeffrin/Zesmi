@@ -10,7 +10,6 @@
 /* Use getInstance() to get ptr to singleton and connect() to provide */
 /* connection to other host */
 
-
 class Logger
 {
     public:

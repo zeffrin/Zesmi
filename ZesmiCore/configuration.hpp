@@ -20,6 +20,7 @@ class Configuration
         short int getValueShort();
         long int getValueLong();
 
+
 };
 
 
