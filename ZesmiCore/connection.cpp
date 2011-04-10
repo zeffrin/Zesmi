@@ -98,6 +98,9 @@ Connection::~Connection()
 
 }
 
+
+/*  TODO When I know for sure how packets are going to work out
+
 void Connection::send(const Block *block)
 {
     return;
@@ -107,6 +110,8 @@ void Connection::send(const Packet *packet)
 {
     return;
 }
+
+*/
 
 bool Connection::isListener()
 {

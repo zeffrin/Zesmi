@@ -49,8 +49,8 @@ class Connection
         ~Connection();
 
         SOCKET doAccept();
-        void send(const Block *block);
-        void send(const Packet *packet);
+        //void send(const Block *block);
+        //void send(const Packet *packet);
         void doRecv();
 
         bool isListener();
@@ -68,8 +68,8 @@ class Connection
         sockaddr _clientaddr;
         int _clientaddrlen;
 
-        list<Packet*> inMessages;  //into server
-        list<Packet*> outMessages; // out of server
+        //list<Packet*> inMessages;  //into server
+        //list<Packet*> outMessages; // out of server
 
         char _sockbuf[1092]; // large enough to hold any packet
 
