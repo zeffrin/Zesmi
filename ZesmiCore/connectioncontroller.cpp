@@ -1,11 +1,14 @@
 
 #include "connectioncontroller.hpp"
+#include "logger.hpp"
 
 ConnectionController* ConnectionController::_instance = NULL;
 
+static Logger::Logger *log = Logger::getInstance();
+
 ConnectionController::ConnectionController()
 {
-
+    log->writeToLog("Spawning ConnectionController");
 }
 
 ConnectionController::~ConnectionController()
@@ -62,8 +65,16 @@ void ConnectionController::doSelect()
     FD_ZERO(&_fd_readyforsend);
     FD_ZERO(&_fd_error);
 
+    int fdmax = 0;
+
+    // TODO Keep a master FD_SET and copy it in instead of setting like this
+
     for ( it = _connections.begin() ; it != _connections.end() ; it++ )
     {
+        if((*it)->getSocket() > fdmax)
+        {
+             fdmax = (*it)->getSocket();
+        }
         FD_SET((*it)->getSocket(), &_fd_error);
         FD_SET((*it)->getSocket(), &_fd_readyforrecv);
         FD_SET((*it)->getSocket(), &_fd_readyforsend);
@@ -73,13 +84,17 @@ void ConnectionController::doSelect()
     }
     for ( it = _listenconns.begin() ; it != _listenconns.end() ; it++ )
     {
+        if((*it)->getSocket() > fdmax)
+        {
+             fdmax = (*it)->getSocket();
+        }
         FD_SET((*it)->getSocket(), &_fd_readyforrecv);
     }
 
-    int result = select(NULL, &_fd_readyforrecv, &_fd_readyforsend, &_fd_error, NULL);
+    int result = select(fdmax+1, &_fd_readyforrecv, &_fd_readyforsend, &_fd_error, NULL);
     if(!result || result == SOCKET_ERROR)
     {
-        //TODO send error to logger
+        log->writeToLog("not result from Select in connection controller\n");
     }
 
 }
@@ -89,20 +104,25 @@ void ConnectionController::doAccept()
     list<Connection*>::iterator it;
     for ( it = _listenconns.begin() ; it != _listenconns.end() ; it++ )
     {
-        if(FD_ISSET((*it), &_fd_readyforrecv))
+        if(FD_ISSET((*it)->getSocket(), &_fd_readyforrecv))
         {
-            (*it)->doAccept();
-            _listenconns.remove(*it);
+            _connections.push_back((*it)->doAccept());
+            log->writeToLog("Accepted connection.\n");
+
         }
     }
 }
 
 void ConnectionController::doRecv()
 {
-        list<Connection*>::iterator it;
-        //Connection *c = NULL;
-        for ( it = _connections.begin() ; it != _connections.end() ; it++ )
+    list<Connection*>::iterator it;
+    //Connection *c = NULL;
+    for ( it = _connections.begin() ; it != _connections.end() ; it++ )
+    {
+        if(FD_ISSET((*it)->getSocket(), &_fd_readyforrecv))
         {
+            log->writeToLog("Receiving data\n");
             (*it)->doRecv();
         }
+    }
 }

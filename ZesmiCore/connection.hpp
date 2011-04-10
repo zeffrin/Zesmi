@@ -46,11 +46,12 @@ class Connection
         Connection(char *port);  //for tcp listening
         //Connection(char *pipename); // connect named pipe
         Connection(char *hostname, char *port); // connect tcp
+        Connection(SOCKET s); // for accepting connections
         ~Connection();
 
-        SOCKET doAccept();
+        Connection *doAccept();
         //void send(const Block *block);
-        //void send(const Packet *packet);
+        void send(const Packet *packet);
         void doRecv();
 
         bool isListener();
@@ -68,8 +69,8 @@ class Connection
         sockaddr _clientaddr;
         int _clientaddrlen;
 
-        //list<Packet*> inMessages;  //into server
-        //list<Packet*> outMessages; // out of server
+        list<Packet*> inMessages;  //into server
+        list<Packet*> outMessages; // out of server
 
         char _sockbuf[1092]; // large enough to hold any packet
 

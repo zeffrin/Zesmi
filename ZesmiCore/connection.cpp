@@ -80,6 +80,12 @@ Connection::Connection(char *port)
 
 }
 
+Connection::Connection(SOCKET s)
+{
+    sock = s;
+    _connstate = OPEN;
+}
+
 Connection::~Connection()
 {
     if(_connstate != CLOSED)
@@ -123,7 +129,7 @@ SOCKET Connection::getSocket()
     return sock;
 }
 
-SOCKET Connection::doAccept()
+Connection* Connection::doAccept()
 {
     SOCKET t;
     t = accept(sock, &_clientaddr, &_clientaddrlen);
@@ -134,7 +140,8 @@ SOCKET Connection::doAccept()
         return NULL;
     }
     _connstate = OPEN;
-    return t;
+    Connection *r = new Connection(t);
+    return r;
 
 }
 
@@ -165,10 +172,33 @@ void Connection::doRecv()
             goagain = true;
         }
         i = recv(sock, buf, i, MSG_PARTIAL);
-
+        strncat(_sockbuf, buf, i);
         // translate stream into Packets and store in connection
+        if( ( strlen(_sockbuf) ) < sizeof(byte))
+        {
+            continue;
+        }
 
-        //Packet *p = new Packet();
+        Packet *t = new Packet();
+        sscanf(_sockbuf, "%1uc", &(t->PacketID));
+        switch(t->PacketID)
+        {
+            case 0x00:
+            {
+                if(strlen(_sockbuf) < sizeof(PlayerID))
+                {
+                    continue;
+                }
+                PlayerID *p = (PlayerID *) t;
+                sscanf(_sockbuf + 2, "%1uc%64s%64s%1uc", &(p->ProtocolVersion), &(p->Username), &(p->VerificationKey), &(p->Unused));
+                log->writeToLog(_sockbuf);
+                *_sockbuf = '\0';
+
+            }
+            default:
+                *_sockbuf = '\0';  // clear the sockbuf
+
+        }
 
 
         // store left over peices in _sockbuf

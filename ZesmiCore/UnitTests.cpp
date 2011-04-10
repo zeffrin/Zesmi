@@ -33,7 +33,7 @@ int main(void)
     {
         conns->doSelect();
         conns->doAccept();
-        //conns->doRecv();
+        conns->doRecv();
         //conns->doRouting();
         //conns->doSend();
     }

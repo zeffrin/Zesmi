@@ -230,12 +230,12 @@
 1302047106 source:c:\users\bens\zesmi\zesmicore\block.cpp
 	"block.hpp"
 
-1302444122 source:c:\users\zeffrin\zesmi\zesmicore\connection.cpp
+1302446734 source:c:\users\zeffrin\zesmi\zesmicore\connection.cpp
 	<stdio.h>
 	"connection.hpp"
 	"logger.hpp"
 
-1302442710 c:\users\zeffrin\zesmi\zesmicore\connection.hpp
+1302450334 c:\users\zeffrin\zesmi\zesmicore\connection.hpp
 	<sys/types.h>
 	<sys/socket.h>
 	<winsock2.h>
@@ -246,10 +246,11 @@
 
 1302005835 c:\users\zeffrin\zesmi\zesmicore\block.hpp
 
-1302444200 c:\users\zeffrin\zesmi\zesmicore\packet.hpp
+1302446037 c:\users\zeffrin\zesmi\zesmicore\packet.hpp
 
-1302005835 source:c:\users\zeffrin\zesmi\zesmicore\connectioncontroller.cpp
+1302447347 source:c:\users\zeffrin\zesmi\zesmicore\connectioncontroller.cpp
 	"connectioncontroller.hpp"
+	"logger.hpp"
 
 1302005835 c:\users\zeffrin\zesmi\zesmicore\connectioncontroller.hpp
 	<list>
@@ -289,7 +290,7 @@
 	<stdio.h>
 	"connectioncontroller.hpp"
 
-1302437053 source:c:\users\zeffrin\zesmi\zesmicore\unittests.cpp
+1302446846 source:c:\users\zeffrin\zesmi\zesmicore\unittests.cpp
 	"initialize.hpp"
 	"logger.hpp"
 	"connectioncontroller.hpp"
