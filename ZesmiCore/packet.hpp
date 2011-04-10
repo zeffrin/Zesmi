@@ -30,9 +30,14 @@ typedef enum {
 typedef struct
 {
     byte PacketID;
+} Packet;
+
+typedef struct
+{
+    byte PacketID;
     byte ProtocolVersion;
-    char *Username;
-    char *VerificationKey;
+    char Username[64];
+    char VerificationKey[64];
     byte Unused;
 
 } PlayerID;
@@ -62,7 +67,7 @@ typedef struct
 {
     byte PacketID;
     byte Unused;
-    char *Message;
+    char Message[64];
 } PlayerMessage;
 
 
@@ -70,8 +75,8 @@ typedef struct
 {
     byte PacketID;
     byte ProtocolVersion;
-    char *ServerName;
-    char *ServerMOTD;
+    char ServerName[64];
+    char ServerMOTD[64];
     byte UserType;
 } ServerID;
 
@@ -89,7 +94,7 @@ typedef struct
 {
     byte PacketID;
     short Length;
-    byte *Data;
+    byte Data[64];
     byte Complete;
 } LevelData;
 
@@ -113,7 +118,7 @@ typedef struct
 {
     byte PacketID;
     sbyte PlayerID;
-    char *PlayerName;
+    char PlayerName[64];
     short X;
     short Y;
     short Z;
@@ -171,13 +176,13 @@ typedef struct
 {
     byte PacketID;
     sbyte PlayerID;
-    char *Message;
+    char Message[64];
 } ServerMessage;
 
 typedef struct
 {
     byte PacketID;
-    char *DisconnectReason;
+    char DisconnectReason[64];
 } DisconnectPlayer;
 
 typedef struct
