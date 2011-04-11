@@ -117,7 +117,6 @@ void ConnectionController::doAccept()
                 _connections.push_back(t);
                 FD_SET(t->getSocket(), &_fd_master);
                 log->writeToLog("Accepted connection.\n");
-                FD_CLR((*it)->getSocket(), &_fd_master);
             }
         }
     }
