@@ -65,23 +65,6 @@ Connection::Connection(char *port)
         // Dont need this anymore, unsure whether need to remove above as well, meh
         freeaddrinfo(result);
 
-        /*
-
-        // Change the socket mode on the listening socket from blocking to non-block
-
-        if(_connstate != CONNERROR)
-        {
-            unsigned long NonBlock = 1;
-            if (ioctlsocket(sock, FIONBIO, &NonBlock) == SOCKET_ERROR)
-            {
-                log->writeToLog("ioctlsocket() failed \n");
-                closesocket(sock);
-                _connstate = CONNERROR;
-            }
-        }
-
-        */
-
         /* Set up queue for incoming connections. */
         if(_connstate != CONNERROR)
         {
@@ -168,6 +151,7 @@ bool Connection::doRecv()
     #define RECV_BUF 256 // TODO put this somewhere better
 
     char buf[RECV_BUF];
+    char *cp;
 
     bool goagain = true;
 
@@ -192,46 +176,40 @@ bool Connection::doRecv()
         }
         strncat(_sockbuf, buf, i);
         // translate stream into Packets and store in connection
-        if( ( strlen(_sockbuf) ) < sizeof(byte))
-        {
-            continue;
-        }
 
-        Packet *t = new Packet();
-        sscanf(_sockbuf, "%1c", &(t->PacketID));
+        Packet *t = new Packet(); // this is wrong will overflow this?
+        sscanf(_sockbuf, "%c", &(t->PacketID));
+        byte test = t->PacketID;
+        cp = _sockbuf + 1;  // set cp to position in sockbuf,
+        //TODO will want to loop through buffer and leave remainder somewhere
         switch(t->PacketID)
         {
+            case P_KEEPALIVE:
+            {
+                break;
+            }
+            case P_LOGIN:
+            {
+                Login *p = (Login *)t;
+                sscanf(cp,"%d%64s%64s%ld%c", &(p->ProtocolVersion), p->Username, p->VerificationKey, &(p->MapSeed), &(p->Dimension));
+                cp += (sizeof(Login) - 1);
+                break;
+            }
+            case P_PLAYERLOOKMOVE:
+            {
+                PlayerLookMove *p = (PlayerLookMove *)t;
+                sscanf(cp, "%lf%lf%lf%lf%f%f", &(p->X), &(p->Y), &(p->Stance), &(p->Z), &(p->Yaw), &(p->Pitch) );
+                cp += (sizeof(PlayerLookMove) - 1);
+                break;
+            }
             default:
             {
-                if(strlen(_sockbuf) < sizeof(PlayerID))
-                {
-                    continue;
-                }
-                PlayerID *p = (PlayerID *) t;
-                sscanf(_sockbuf + 2, "%c%64s%64s%c", &(p->ProtocolVersion), *(&(p->Username)), *(&(p->VerificationKey)), &(p->Unused));
-                *_sockbuf = '\0';
-
-                //sprintf(_sockbuf, "%c\n%s\n%s", &(p->ProtocolVersion), *(&(p->Username)), *(&(p->VerificationKey)));
-                //log->writeToLog(_sockbuf);
-                //*_sockbuf = '\0';
-
-                // TODO not be faking this here
-                ServerID s;
-                s.PacketID = 0x00;
-                s.ProtocolVersion = p->ProtocolVersion;
-                strncpy(s.ServerMOTD, "Black Sheep        Black Sheep        Black Sheep              ", 64);
-                strncpy(s.ServerName, "Zeff                                                           ", 64);
-                s.UserType = 0x01;
-
-                SendPacket((Packet *)&s, PLAYERID);
+                *_sockbuf = '\0';  // TODO unknown packet should cause disconnect
                 break;
-
             }
-            //default:
-            //    *_sockbuf = '\0';  // clear the sockbuf
-
         }
 
+        inMessages.push_back(t);
 
         // TODO store left over peices back in sockbuf
 
@@ -278,12 +256,13 @@ void Connection::LogSocketError()
     }
 }
 
+/*
 void Connection::SendPacket(const Packet *p, PacketType pt) // TODO Make PacketType enum right, and have a matching size array
 {
     char buf[1092];
     switch(pt)
     {
-        case PLAYERID:
+        case P_LOGIN:
                         ServerID *s = (ServerID *)p;
                         sprintf(buf, "%1uc%1uc%s%s%1uc", s->PacketID, s->ProtocolVersion, s->ServerName, s->ServerMOTD, s->UserType);
                         log->writeToLog(buf);
@@ -293,3 +272,5 @@ void Connection::SendPacket(const Packet *p, PacketType pt) // TODO Make PacketT
 
 
 }
+
+*/

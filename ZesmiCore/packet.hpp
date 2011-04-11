@@ -6,26 +6,60 @@ typedef unsigned char byte;
 typedef signed char sbyte;
 
 typedef enum {
-    PLAYERID, //0x00
-    PLYRSTBLCK, //0x05
-    PLYRVECTOR, // 0x08
-    PLYRMSG, // 0x0d
-    SERVERID, // 0x00
-    PING, // 0x01
-    LEVELINIT, // 0x02
-    LEVELDATA, // 0x03
-    LEVELFINISH, // 0x04
-    SRVRSTBLCK, // 0x06
-    SPAWNPLAYER, // 0x07
-    SRVRVECTOR, // 0x08
-    SERVERVECTORUPDATE, // 0x09
-    POSITIONUPDATE,  // 0x0a
-    ORIENTATIONUPDATE, // 0x0b
-    DESPAWNPLAYER, //0x0c
-    SERVERMSG, //0x0d
-    DISCONNECTPLYR, //0x0e
-    UPDATEUSRTYPE //0x0f
+    P_KEEPALIVE,
+    P_LOGIN,
+    P_HANDSHAKE,
+    P_CHAT,
+    P_UPDATETIME,
+    P_PLAYERINVENTORY,
+    P_SPAWNPOSITION,
+    P_PACKET7,
+    P_PACKET8,
+    P_PACKET9,
+    P_FLYING,
+    P_PLAYERPOSITION,
+    P_PLAYERLOOK,
+    P_PLAYERLOOKMOVE,
+    P_BLOCKDIG,
+    P_PLACE,
+    P_BLOCKITEMSWITCH,
+    P_SLEEP,
+    P_ARMANIMATION,
+    P_PACKET19,
+    P_NAMEDENTITYSPAWN,
+    P_PICKUPSPAWN,
+    P_COLLECT,
+    P_VEHICLESPAWN,
+    P_MOBSPAWN,
+    P_PACKET25,
+    P_PACKET26,
+    P_PACKET27,
+    P_PACKET28,
+    P_DESTROYENTITY,
+    P_ENTITY,
+    P_RELENTITYMOVE,
+    P_ENTITYLOOK,
+    P_RELENTITYMOVELOOK,
+    P_ENTITYTELEPORT,
+    P_PACKET38,
+    P_PACKET39,
+    P_PACKET40,
+    P_PRECHUNK,
+    P_MAPCHUNK,
+    P_MULTIBLOCKCHANGE,
+    P_BLOCKCHANGE,
+    P_PACKET54,
+    P_PACKET60,
+    P_PACKET70,
+    P_PACKET100,
+    P_PACKET101,
+    P_PACKET102,
+    P_PACKET103,
+    P_PACKET104,
+    P_PACKET105,
+    P_PACKET106      // TODO go up to 255 for kick/dc
 } PacketType;
+
 
 typedef struct
 {
@@ -34,161 +68,29 @@ typedef struct
 
 typedef struct
 {
+    int i;
+} KeepAlive;
+
+typedef struct
+{
     byte PacketID;
-    byte ProtocolVersion;
+    short ProtocolVersion;
     char Username[64];
     char VerificationKey[64];
-    byte Unused;
+    long MapSeed;
+    byte Dimension;
 
-} PlayerID;
-
-typedef struct
-{
-    byte PacketID;
-    short X;
-    short Y;
-    short Z;
-    byte Mode;
-    byte BlockType;
-} PlayerSetBlock;
+} Login;
 
 typedef struct
 {
     byte PacketID;
-    byte PlayerID;
-    short X;
-    short Y;
-    short Z;
-    byte Yaw;
-    byte Pitch;
-} PlayerVector;
-
-typedef struct
-{
-    byte PacketID;
-    byte Unused;
-    char Message[64];
-} PlayerMessage;
-
-
-typedef struct
-{
-    byte PacketID;
-    byte ProtocolVersion;
-    char ServerName[64];
-    char ServerMOTD[64];
-    byte UserType;
-} ServerID;
-
-typedef struct
-{
-    byte PacketID;
-} Ping;
-
-typedef struct
-{
-    byte PacketID;
-} LevelInit;
-
-typedef struct
-{
-    byte PacketID;
-    short Length;
-    byte Data[64];
-    byte Complete;
-} LevelData;
-
-typedef struct
-{
-    byte PacketID;
-    short XSize;
-    short YSize;
-    short ZSize;
-} LevelFinish;
-
-typedef struct
-{
-    byte PacketID;
-    short X;
-    short Y;
-    short Z;
-} ServerSetBlock;
-
-typedef struct
-{
-    byte PacketID;
-    sbyte PlayerID;
-    char PlayerName[64];
-    short X;
-    short Y;
-    short Z;
-    byte Yaw;
-    byte Pitch;
-} SpawnPlayer;
-
-typedef struct
-{
-    byte PacketID;
-    sbyte PlayerID;
-    short X;
-    short Y;
-    short Z;
-    byte Yaw;
-    byte Pitch;
-} ServerVector;
-
-typedef struct
-{
-    byte PacketID;
-    sbyte PlayerID;
-    short X;
-    short Y;
-    short Z;
-    byte Yaw;
-    byte Pitch;
-
-} ServerVectorUpdate;
-
-typedef struct
-{
-    byte PacketID;
-    sbyte PlayerID;
-    sbyte ChangeX;
-    sbyte ChangeY;
-    sbyte ChangeZ;
-} PositionUpdate;
-
-typedef struct
-{
-    byte PacketID;
-    sbyte PlayerID;
-    byte Yaw;
-    byte Pitch;
-} OrientationUpdate;
-
-typedef struct
-{
-    byte PacketID;
-    sbyte PlayerID;
-} DespawnPlayer;
-
-typedef struct
-{
-    byte PacketID;
-    sbyte PlayerID;
-    char Message[64];
-} ServerMessage;
-
-typedef struct
-{
-    byte PacketID;
-    char DisconnectReason[64];
-} DisconnectPlayer;
-
-typedef struct
-{
-    byte PacketID;
-    byte UserType;
-} UpdateUserType;
+    double X;
+    double Y;
+    double Stance;
+    double Z;
+    float Yaw;
+    float Pitch;
+} PlayerLookMove;
 
 #endif
