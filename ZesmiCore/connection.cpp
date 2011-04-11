@@ -168,23 +168,12 @@ bool Connection::doRecv()
 
     char buf[RECV_BUF];
 
-    if(strlen(_sockbuf) > 0)
-    {
-        strncpy(buf, _sockbuf, RECV_BUF);
-        _sockbuf[0] = '\0';
-    }
-
     bool goagain = true;
+
 
     while(goagain)
     {
-        int i = recv(sock, buf, 256, MSG_PEEK);
-        if(i <= 0)
-        {
-            log->writeToLog("Error peeking at data\n");
-            goagain = false;
-            return false;
-        }
+        int i = recv(sock, buf, i, 0);
         if ( i > RECV_BUF )
         {
             i = RECV_BUF;
@@ -194,7 +183,6 @@ bool Connection::doRecv()
         {
             goagain = false;
         }
-        i = recv(sock, buf, i, MSG_PARTIAL);
         if(i <= 0)
         {
             log->writeToLog("Socket closed\n");
@@ -243,9 +231,11 @@ bool Connection::doRecv()
 
         // TODO store left over peices back in sockbuf
 
+
+
     }
 
-
+    return true;
 
 
 }

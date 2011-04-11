@@ -9,7 +9,7 @@ static Logger::Logger *log = Logger::getInstance();
 ConnectionController::ConnectionController()
 {
     FD_ZERO(&_fd_master);
-    log->writeToLog("Spawning ConnectionController");
+    log->writeToLog("Spawning ConnectionController\n");
 }
 
 ConnectionController::~ConnectionController()
@@ -47,7 +47,7 @@ Connection* ConnectionController::startListen(char *port)
     Connection *c = new Connection(port);
     if(!c)
     {
-        // TODO: send to logger
+        log->writeToLog("Connection Controller: Error spawning listening connection\n");
         return NULL;
     }
     _listenconns.push_back(c);
@@ -115,7 +115,9 @@ void ConnectionController::doAccept()
             if(t)
             {
                 _connections.push_back(t);
+                FD_SET(t->getSocket(), &_fd_master);
                 log->writeToLog("Accepted connection.\n");
+                FD_CLR((*it)->getSocket(), &_fd_master);
             }
         }
     }
@@ -124,6 +126,9 @@ void ConnectionController::doAccept()
 void ConnectionController::doRecv()
 {
     list<Connection*>::iterator it;
+    list<Connection*> tbd;
+
+
     //Connection *c = NULL;
     for ( it = _connections.begin() ; it != _connections.end() ; it++ )
     {
@@ -132,11 +137,15 @@ void ConnectionController::doRecv()
             log->writeToLog("Receiving data\n");
             if(!(*it)->doRecv())
             {
-                delete *it;
-                _connections.erase(it);
-                it--;
+                tbd.push_back(*it);
             }
         }
+    }
+    for ( it = tbd.begin() ; it != tbd.end() ; it ++ )
+    {
+        FD_CLR((*it)->getSocket(), &_fd_master);
+        _connections.remove(*it);
+        delete *it;
     }
 }
 
