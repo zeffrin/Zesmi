@@ -198,19 +198,22 @@ bool Connection::doRecv()
         }
 
         Packet *t = new Packet();
-        sscanf(_sockbuf, "%1uc", &(t->PacketID));
+        sscanf(_sockbuf, "%1c", &(t->PacketID));
         switch(t->PacketID)
         {
-            case 0x00:
+            default:
             {
                 if(strlen(_sockbuf) < sizeof(PlayerID))
                 {
                     continue;
                 }
                 PlayerID *p = (PlayerID *) t;
-                sscanf(_sockbuf + 2, "%1uc%64s%64s%1uc", &(p->ProtocolVersion), &(p->Username), &(p->VerificationKey), &(p->Unused));
+                sscanf(_sockbuf + 2, "%c%64s%64s%c", &(p->ProtocolVersion), *(&(p->Username)), *(&(p->VerificationKey)), &(p->Unused));
                 *_sockbuf = '\0';
 
+                //sprintf(_sockbuf, "%c\n%s\n%s", &(p->ProtocolVersion), *(&(p->Username)), *(&(p->VerificationKey)));
+                //log->writeToLog(_sockbuf);
+                //*_sockbuf = '\0';
 
                 // TODO not be faking this here
                 ServerID s;
@@ -220,12 +223,12 @@ bool Connection::doRecv()
                 strncpy(s.ServerName, "Zeff                                                           ", 64);
                 s.UserType = 0x01;
 
-                //SendPacket((Packet *)&s, PLAYERID);
+                SendPacket((Packet *)&s, PLAYERID);
                 break;
 
             }
-            default:
-                *_sockbuf = '\0';  // clear the sockbuf
+            //default:
+            //    *_sockbuf = '\0';  // clear the sockbuf
 
         }
 
