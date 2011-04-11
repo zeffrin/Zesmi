@@ -59,6 +59,9 @@ class Connection
         SOCKET sock;
 
     private:
+
+        void LogSocketError(void);
+
         char *_host;
         short int _connectiontype;
         short int _port;

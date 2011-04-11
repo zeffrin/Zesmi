@@ -235,7 +235,7 @@
 	"connection.hpp"
 	"logger.hpp"
 
-1302516122 c:\users\zeffrin\zesmi\zesmicore\connection.hpp
+1302520975 c:\users\zeffrin\zesmi\zesmicore\connection.hpp
 	<sys/types.h>
 	<sys/socket.h>
 	<winsock2.h>
@@ -248,7 +248,7 @@
 
 1302446037 c:\users\zeffrin\zesmi\zesmicore\packet.hpp
 
-1302517734 source:c:\users\zeffrin\zesmi\zesmicore\connectioncontroller.cpp
+1302519278 source:c:\users\zeffrin\zesmi\zesmicore\connectioncontroller.cpp
 	"connectioncontroller.hpp"
 	"logger.hpp"
 

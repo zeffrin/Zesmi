@@ -149,11 +149,12 @@ SOCKET Connection::getSocket()
 Connection* Connection::doAccept()
 {
     SOCKET t;
-    t = accept(sock, &_clientaddr, &_clientaddrlen);
-    if(!t)
+    t = accept(sock, NULL, NULL);
+    if(t == INVALID_SOCKET)
     {
         _connstate = CONNERROR;
-        log->writeToLog("Error while accepting connection\n");
+
+        LogSocketError();
         return NULL;
     }
     _connstate = OPEN;
@@ -238,6 +239,40 @@ bool Connection::doRecv()
     return true;
 
 
+}
+
+void Connection::LogSocketError()
+{
+    switch(WSAGetLastError())
+    {
+        case WSANOTINITIALISED: log->writeToLog("A successful WSAStartup call must occur before using this function.\n");
+                                break;
+        case WSAECONNRESET:     log->writeToLog("An incoming connection was indicated, but was subsequently terminated by the remote peer prior to accepting the call.\n");
+                                break;
+        case WSAEFAULT:         log->writeToLog("The addrlen parameter is too small or addr is not a valid part of the user address space.\n");
+                                break;
+        case WSAEINTR:          log->writeToLog("A blocking Windows Sockets 1.1 call was canceled through WSACancelBlockingCall.\n");
+                                break;
+        case WSAEINVAL:         log->writeToLog("The listen function was not invoked prior to accept.\n");
+                                break;
+        case WSAEINPROGRESS:    log->writeToLog("A blocking Windows Sockets 1.1 call is in progress, or the service provider is still processing a callback function.\n");
+                                break;
+        case WSAEMFILE:         log->writeToLog("The queue is nonempty upon entry to accept and there are no descriptors available.\n");
+                                break;
+        case WSAENETDOWN:       log->writeToLog("The network subsystem has failed.\n");
+                                break;
+        case WSAENOBUFS:        log->writeToLog("No buffer space is available.\n");
+                                break;
+        case WSAENOTSOCK:       log->writeToLog("The descriptor is not a socket.\n");
+                                break;
+        case WSAEOPNOTSUPP:     log->writeToLog("The referenced socket is not a type that supports connection-oriented service.\n");
+                                break;
+        case WSAEWOULDBLOCK:    log->writeToLog("The socket is marked as nonblocking and no connections are present to be accepted.\n");
+                                break;
+        default:
+                                log->writeToLog("SOCKET Unknown error\n");
+                                break;
+    }
 }
 
 void Connection::SendPacket(const Packet *p, PacketType pt) // TODO Make PacketType enum right, and have a matching size array
