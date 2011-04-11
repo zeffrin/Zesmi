@@ -130,7 +130,12 @@ void ConnectionController::doRecv()
         if(FD_ISSET((*it)->getSocket(), &_fd_readyforrecv))
         {
             log->writeToLog("Receiving data\n");
-            (*it)->doRecv();
+            if(!(*it)->doRecv())
+            {
+                delete *it;
+                _connections.erase(it);
+                it--;
+            }
         }
     }
 }

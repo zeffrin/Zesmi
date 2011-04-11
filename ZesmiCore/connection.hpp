@@ -52,7 +52,7 @@ class Connection
         Connection *doAccept();
         //void send(const Block *block);
         void SendPacket(const Packet *packet, PacketType pt);
-        void doRecv();
+        bool doRecv();
 
         bool isListener();
         SOCKET getSocket();

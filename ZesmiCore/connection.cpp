@@ -65,6 +65,7 @@ Connection::Connection(char *port)
         // Dont need this anymore, unsure whether need to remove above as well, meh
         freeaddrinfo(result);
 
+        /*
 
         // Change the socket mode on the listening socket from blocking to non-block
 
@@ -78,6 +79,8 @@ Connection::Connection(char *port)
                 _connstate = CONNERROR;
             }
         }
+
+        */
 
         /* Set up queue for incoming connections. */
         if(_connstate != CONNERROR)
@@ -159,7 +162,7 @@ Connection* Connection::doAccept()
 
 }
 
-void Connection::doRecv()
+bool Connection::doRecv()
 {
     #define RECV_BUF 256 // TODO put this somewhere better
 
@@ -180,8 +183,7 @@ void Connection::doRecv()
         {
             log->writeToLog("Error peeking at data\n");
             goagain = false;
-            delete this; // socket has been closed
-            break;
+            return false;
         }
         if ( i > RECV_BUF )
         {
@@ -197,8 +199,7 @@ void Connection::doRecv()
         {
             log->writeToLog("Socket closed\n");
             goagain = false;
-            delete this; // socket has been closed
-            break;
+            return false;
         }
         strncat(_sockbuf, buf, i);
         // translate stream into Packets and store in connection
