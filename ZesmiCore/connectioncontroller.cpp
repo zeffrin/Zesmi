@@ -8,6 +8,7 @@ static Logger::Logger *log = Logger::getInstance();
 
 ConnectionController::ConnectionController()
 {
+    FD_ZERO(&_fd_master);
     log->writeToLog("Spawning ConnectionController");
 }
 
@@ -18,6 +19,7 @@ ConnectionController::~ConnectionController()
     {
         c = _connections.back();
         _connections.pop_back();
+        FD_CLR(c->getSocket(), &_fd_master);
         delete c;
 
     }
@@ -25,6 +27,7 @@ ConnectionController::~ConnectionController()
     {
         c = _listenconns.back();
         _listenconns.pop_back();
+        FD_CLR(c->getSocket(), &_fd_master);
         delete c;
 
     }
@@ -48,12 +51,14 @@ Connection* ConnectionController::startListen(char *port)
         return NULL;
     }
     _listenconns.push_back(c);
+    FD_SET(c->getSocket(), &_fd_master);
     return c;
 }
 
 void ConnectionController::stopListen(Connection *conn)
 {
     _listenconns.remove(conn);
+    FD_CLR(conn->getSocket(), &_fd_master);
     delete conn;
 }
 
@@ -65,38 +70,38 @@ void ConnectionController::doSelect()
     FD_ZERO(&_fd_readyforsend);
     FD_ZERO(&_fd_error);
 
-    int fdmax = 0;
+    _fd_readyforrecv = _fd_master;
+    _fd_readyforsend = _fd_master;
+    _fd_error = _fd_master;
 
-    // TODO Keep a master FD_SET and copy it in instead of setting like this
+    // TODO fdmax is ignored according to msdn, but it fixed my trouble before I think
+    int result = select(NULL, &_fd_readyforrecv, &_fd_readyforsend, &_fd_error, NULL);
+    if(!result)
+    {
+        log->writeToLog("result = 0 in select()\n");
+    }
+
+    if(result == SOCKET_ERROR)
+    {
+        log->writeToLog("SOCKET ERROR in select()\n");
+    }
+
+}
+
+void ConnectionController::doError()
+{
+    list<Connection*>::iterator it;
 
     for ( it = _connections.begin() ; it != _connections.end() ; it++ )
     {
-        if((*it)->getSocket() > fdmax)
+        if(FD_ISSET((*it)->getSocket(), &_fd_error))
         {
-             fdmax = (*it)->getSocket();
+            it = _connections.erase(it);
+            it--;
+            log->writeToLog("Error connection\n");
         }
-        FD_SET((*it)->getSocket(), &_fd_error);
-        FD_SET((*it)->getSocket(), &_fd_readyforrecv);
-        FD_SET((*it)->getSocket(), &_fd_readyforsend);
-
-        //assert(_fd_readyforrecv != NULL));
 
     }
-    for ( it = _listenconns.begin() ; it != _listenconns.end() ; it++ )
-    {
-        if((*it)->getSocket() > fdmax)
-        {
-             fdmax = (*it)->getSocket();
-        }
-        FD_SET((*it)->getSocket(), &_fd_readyforrecv);
-    }
-
-    int result = select(fdmax+1, &_fd_readyforrecv, &_fd_readyforsend, &_fd_error, NULL);
-    if(!result || result == SOCKET_ERROR)
-    {
-        log->writeToLog("not result from Select in connection controller\n");
-    }
-
 }
 
 void ConnectionController::doAccept()
@@ -106,9 +111,12 @@ void ConnectionController::doAccept()
     {
         if(FD_ISSET((*it)->getSocket(), &_fd_readyforrecv))
         {
-            _connections.push_back((*it)->doAccept());
-            log->writeToLog("Accepted connection.\n");
-
+            Connection *t = (*it)->doAccept();
+            if(t)
+            {
+                _connections.push_back(t);
+                log->writeToLog("Accepted connection.\n");
+            }
         }
     }
 }
@@ -126,3 +134,4 @@ void ConnectionController::doRecv()
         }
     }
 }
+

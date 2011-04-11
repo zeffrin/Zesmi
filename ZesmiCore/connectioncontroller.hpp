@@ -37,6 +37,8 @@ class ConnectionController
         list<Connection*> _connections;
         list<Connection*> _listenconns;
 
+        fd_set _fd_master;
+
         fd_set _fd_readyforsend;
         fd_set _fd_readyforrecv;
         fd_set _fd_error;

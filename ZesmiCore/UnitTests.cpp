@@ -32,8 +32,10 @@ int main(void)
     while(1)
     {
         conns->doSelect();
-        conns->doAccept();
         conns->doRecv();
+        conns->doError();
+        conns->doAccept();
+
         //conns->doRouting();
         //conns->doSend();
     }

@@ -51,12 +51,10 @@ class Connection
 
         Connection *doAccept();
         //void send(const Block *block);
-        void send(const Packet *packet);
+        void SendPacket(const Packet *packet, PacketType pt);
         void doRecv();
 
         bool isListener();
-
-
         SOCKET getSocket();
         SOCKET sock;
 
@@ -68,6 +66,8 @@ class Connection
         ConnectionState _connstate;
         sockaddr _clientaddr;
         int _clientaddrlen;
+
+
 
         list<Packet*> inMessages;  //into server
         list<Packet*> outMessages; // out of server
