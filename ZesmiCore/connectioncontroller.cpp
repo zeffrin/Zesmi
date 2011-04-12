@@ -1,15 +1,11 @@
 
 #include "connectioncontroller.hpp"
-#include "logger.hpp"
 
 ConnectionController* ConnectionController::_instance = NULL;
-
-static Logger::Logger *log = Logger::getInstance();
 
 ConnectionController::ConnectionController()
 {
     FD_ZERO(&_fd_master);
-    log->writeToLog("Spawning ConnectionController\n");
 }
 
 ConnectionController::~ConnectionController()
@@ -47,7 +43,6 @@ Connection* ConnectionController::startListen(char *port)
     Connection *c = new Connection(port);
     if(!c)
     {
-        log->writeToLog("Connection Controller: Error spawning listening connection\n");
         return NULL;
     }
     _listenconns.push_back(c);
@@ -62,7 +57,7 @@ void ConnectionController::stopListen(Connection *conn)
     delete conn;
 }
 
-void ConnectionController::doSelect()
+bool ConnectionController::doSelect()
 {
     list<Connection*>::iterator it;
 
@@ -76,15 +71,11 @@ void ConnectionController::doSelect()
 
     // TODO fdmax is ignored according to msdn, but it fixed my trouble before I think
     int result = select(NULL, &_fd_readyforrecv, &_fd_readyforsend, &_fd_error, NULL);
-    if(!result)
+    if(!result || result == SOCKET_ERROR)
     {
-        log->writeToLog("result = 0 in select()\n");
+        return false;
     }
-
-    if(result == SOCKET_ERROR)
-    {
-        log->writeToLog("SOCKET ERROR in select()\n");
-    }
+    return true;
 
 }
 
@@ -98,7 +89,6 @@ void ConnectionController::doError()
         {
             it = _connections.erase(it);
             it--;
-            log->writeToLog("Error connection\n");
         }
 
     }
@@ -116,7 +106,6 @@ void ConnectionController::doAccept()
             {
                 _connections.push_back(t);
                 FD_SET(t->getSocket(), &_fd_master);
-                log->writeToLog("Accepted connection.\n");
             }
         }
     }
@@ -133,7 +122,6 @@ void ConnectionController::doRecv()
     {
         if(FD_ISSET((*it)->getSocket(), &_fd_readyforrecv))
         {
-            log->writeToLog("Receiving data\n");
             if(!(*it)->doRecv())
             {
                 tbd.push_back(*it);

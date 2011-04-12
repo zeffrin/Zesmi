@@ -20,7 +20,7 @@ class ConnectionController
         Connection* startListen(char *port);
         void stopListen(Connection *conn);
         //Connection* connect(short int *port);
-        void doSelect();
+        bool doSelect();
         void doAccept();
         void doSend();
         void doRecv();
