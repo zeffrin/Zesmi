@@ -180,7 +180,7 @@ bool Connection::doRecv()
         Packet *t = new Packet(); // this is wrong will overflow this?
         sscanf(_sockbuf, "%c", &(t->PacketID));
         byte test = t->PacketID;
-        cp = _sockbuf + 1;  // set cp to position in sockbuf,
+        cp = _sockbuf;  // set cp to position in sockbuf,
         //TODO will want to loop through buffer and leave remainder somewhere
         switch(t->PacketID)
         {
@@ -191,15 +191,15 @@ bool Connection::doRecv()
             case P_LOGIN:
             {
                 Login *p = (Login *)t;
-                sscanf(cp,"%d%64s%64s%ld%c", &(p->ProtocolVersion), p->Username, p->VerificationKey, &(p->MapSeed), &(p->Dimension));
-                cp += (sizeof(Login) - 1);
+                sscanf(cp + 1,"%d%64s%64s%ld%c", &(p->ProtocolVersion), p->Username, p->VerificationKey, &(p->MapSeed), &(p->Dimension));
+                cp += sizeof(Login);
                 break;
             }
             case P_PLAYERLOOKMOVE:
             {
                 PlayerLookMove *p = (PlayerLookMove *)t;
-                sscanf(cp, "%lf%lf%lf%lf%f%f", &(p->X), &(p->Y), &(p->Stance), &(p->Z), &(p->Yaw), &(p->Pitch) );
-                cp += (sizeof(PlayerLookMove) - 1);
+                sscanf(cp + 1, "%lf%lf%lf%lf%f%f", &(p->X), &(p->Y), &(p->Stance), &(p->Z), &(p->Yaw), &(p->Pitch) );
+                cp += sizeof(PlayerLookMove);
                 break;
             }
             default:
