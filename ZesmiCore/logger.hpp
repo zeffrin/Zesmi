@@ -3,6 +3,7 @@
 #define LOGGER_HPP_INCLUDED
 
 #include <stdio.h>
+#include <cstdarg>
 
 #include "connectioncontroller.hpp"
 
@@ -16,7 +17,8 @@ class Logger
 
        static Logger* getInstance();
 
-        void writeToLog(char *msg);
+        //void writeToLog(char *msg);
+        void writeToLog(char *fmt, ...);
          bool connect(Connection *connection);
         ~Logger();  // otherwise logger host
 
