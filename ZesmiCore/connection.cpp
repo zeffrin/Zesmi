@@ -158,7 +158,7 @@ bool Connection::doRecv()
 
     while(goagain)
     {
-        int i = recv(sock, buf, i, 0);
+        int i = recv(sock, buf, RECV_BUF - 1, 0);
         if ( i > RECV_BUF )
         {
             i = RECV_BUF;
@@ -175,14 +175,20 @@ bool Connection::doRecv()
             return false;
         }
         strncat(_sockbuf, buf, i);
-        // translate stream into Packets and store in connection
 
-        Packet *t = new Packet(); // this is wrong will overflow this?
-        sscanf(_sockbuf, "%c", &(t->PacketID));
-        byte test = t->PacketID;
-        cp = _sockbuf;  // set cp to position in sockbuf,
+        // Get Packet ID
+        char t;
+        sscanf(_sockbuf, "%c", &t);
+        cp = _sockbuf;  // set cp to position in sockbuf
+
+
+        log->writeToLog("Received packet.\n");
+        //log->writeLogFile("Received packet %c", t);  // TODO make this happen.. C++ varargs?
+
+
         //TODO will want to loop through buffer and leave remainder somewhere
-        switch(t->PacketID)
+        Packet *p;
+        switch(t)
         {
             case P_KEEPALIVE:
             {
@@ -190,26 +196,35 @@ bool Connection::doRecv()
             }
             case P_LOGIN:
             {
-                Login *p = (Login *)t;
-                sscanf(cp + 1,"%d%64s%64s%ld%c", &(p->ProtocolVersion), p->Username, p->VerificationKey, &(p->MapSeed), &(p->Dimension));
+                Login *t = new Login;
+                // TODO if args from sscanf correct bla if not bla
+                sscanf(cp,"%c%d%64s%64s%ld%c", &(t->PacketID), &(t->ProtocolVersion), t->Username, t->VerificationKey, &(t->MapSeed), &(t->Dimension));
                 cp += sizeof(Login);
+                p = (Packet*)t;
                 break;
             }
             case P_PLAYERLOOKMOVE:
             {
-                PlayerLookMove *p = (PlayerLookMove *)t;
-                sscanf(cp + 1, "%lf%lf%lf%lf%f%f", &(p->X), &(p->Y), &(p->Stance), &(p->Z), &(p->Yaw), &(p->Pitch) );
+                PlayerLookMove *t = new PlayerLookMove;
+                // TODO if args from sscanf correct bla if not bla
+                sscanf(cp, "%c%lf%lf%lf%lf%f%f", &(t->PacketID), &(t->X), &(t->Y), &(t->Stance), &(t->Z), &(t->Yaw), &(t->Pitch) );
                 cp += sizeof(PlayerLookMove);
+                p = (Packet*)t;
                 break;
             }
             default:
             {
                 *_sockbuf = '\0';  // TODO unknown packet should cause disconnect
+                p = NULL;
                 break;
             }
         }
 
-        inMessages.push_back(t);
+        if(p)
+        {
+            inMessages.push_back(p);
+        }
+
 
         // TODO store left over peices back in sockbuf
 
