@@ -1,4 +1,3 @@
-
 #include "logger.hpp"
 
 #define LOGFILE "server.log" //TODO move to central config
@@ -75,7 +74,7 @@ void Logger::writeToLog(char *fmt, ...)
     void *ptrs[6];
 
     va_start(ap, fmt);
-    while( (i < 6 + 1) && ( *(p = va_arg(ap, void*) ) != NULL))
+    while( (i < 6 + 1) && ( *(p = va_arg(ap, void*) ) != NULL))  // I guess void * here was wishful thinking
     {
         ptrs[i] = p;
         i++;
