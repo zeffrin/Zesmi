@@ -230,12 +230,12 @@
 1302047106 source:c:\users\bens\zesmi\zesmicore\block.cpp
 	"block.hpp"
 
-1302528842 source:c:\users\zeffrin\zesmi\zesmicore\connection.cpp
+1302606965 source:c:\users\zeffrin\zesmi\zesmicore\connection.cpp
 	<stdio.h>
 	"connection.hpp"
 	"logger.hpp"
 
-1302520975 c:\users\zeffrin\zesmi\zesmicore\connection.hpp
+1302610549 c:\users\zeffrin\zesmi\zesmicore\connection.hpp
 	<sys/types.h>
 	<sys/socket.h>
 	<winsock2.h>
@@ -246,13 +246,12 @@
 
 1302005835 c:\users\zeffrin\zesmi\zesmicore\block.hpp
 
-1302533221 c:\users\zeffrin\zesmi\zesmicore\packet.hpp
+1302610402 c:\users\zeffrin\zesmi\zesmicore\packet.hpp
 
-1302519278 source:c:\users\zeffrin\zesmi\zesmicore\connectioncontroller.cpp
+1302609067 source:c:\users\zeffrin\zesmi\zesmicore\connectioncontroller.cpp
 	"connectioncontroller.hpp"
-	"logger.hpp"
 
-1302460310 c:\users\zeffrin\zesmi\zesmicore\connectioncontroller.hpp
+1302609024 c:\users\zeffrin\zesmi\zesmicore\connectioncontroller.hpp
 	<list>
 	"connection.hpp"
 
@@ -265,10 +264,11 @@
 	<winsock2.h>
 	<ws2tcpip.h>
 
-1302005835 source:c:\users\zeffrin\zesmi\zesmicore\living.cpp
+1302608187 source:c:\users\zeffrin\zesmi\zesmicore\living.cpp
 	"living.hpp"
 
-1302005835 c:\users\zeffrin\zesmi\zesmicore\living.hpp
+1302607973 c:\users\zeffrin\zesmi\zesmicore\living.hpp
+	"vector.hpp"
 
 1302444070 source:c:\users\zeffrin\zesmi\zesmicore\packet.cpp
 	"packet.hpp"
@@ -294,4 +294,6 @@
 	"initialize.hpp"
 	"logger.hpp"
 	"connectioncontroller.hpp"
+
+1302607927 c:\users\zeffrin\zesmi\zesmicore\vector.hpp
 

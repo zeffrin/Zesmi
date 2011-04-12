@@ -68,7 +68,7 @@ typedef struct
 
 typedef struct
 {
-    int i;
+    byte PacketID;
 } KeepAlive;
 
 typedef struct

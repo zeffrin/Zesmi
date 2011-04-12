@@ -81,6 +81,7 @@ Connection::Connection(char *port)
 
 Connection::Connection(SOCKET s)
 {
+    //For use accepting connections
     sock = s;
     _connstate = OPEN;
 }
@@ -102,21 +103,6 @@ Connection::~Connection()
     }
 
 }
-
-
-/*  TODO When I know for sure how packets are going to work out
-
-void Connection::send(const Block *block)
-{
-    return;
-}
-
-void Connection::send(const Packet *packet)
-{
-    return;
-}
-
-*/
 
 bool Connection::isListener()
 {
@@ -181,16 +167,22 @@ bool Connection::doRecv()
         cp = _sockbuf;  // set cp to position in sockbuf
 
 
-        log->writeToLog("Received packet.\n");
+        char tmp[30];
+        sprintf(tmp, "Received packet: %d\n", t);
+        log->writeToLog(tmp);
         //log->writeLogFile("Received packet %c", t);  // TODO make this happen.. C++ varargs?
 
 
         //TODO will want to loop through buffer and leave remainder somewhere
         Packet *p;
+
         switch(t)
         {
             case P_KEEPALIVE:
             {
+                KeepAlive k;
+                k.PacketID = 0;
+                SendPacket((Packet*)&k);
                 break;
             }
             case P_LOGIN:
@@ -270,21 +262,25 @@ void Connection::LogSocketError()
     }
 }
 
-/*
-void Connection::SendPacket(const Packet *p, PacketType pt) // TODO Make PacketType enum right, and have a matching size array
+bool Connection::SendPacket(const Packet *p) // TODO Make PacketType enum right, and have a matching size array
 {
     char buf[1092];
-    switch(pt)
+    switch(p->PacketID)
     {
-        case P_LOGIN:
-                        ServerID *s = (ServerID *)p;
-                        sprintf(buf, "%1uc%1uc%s%s%1uc", s->PacketID, s->ProtocolVersion, s->ServerName, s->ServerMOTD, s->UserType);
-                        log->writeToLog(buf);
-                        int r = send(sock, buf, 131, 0);
-                        break;
+        case P_KEEPALIVE:
+            *buf = '\0';
+            break;
+        default:
+            log->writeToLog("Trying to send unknown packet\n");
+            *buf = '\0';
+            return false;
     }
+    send(sock, buf, strlen(buf) + 1, 0); // need to do error checking
+    log->writeToLog("Sending to client: ");
+    log->writeToLog(buf);
+    log->writeToLog("\n");
 
 
 }
 
-*/
+

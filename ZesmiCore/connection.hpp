@@ -51,7 +51,7 @@ class Connection
 
         Connection *doAccept();
         //void send(const Block *block);
-        void SendPacket(const Packet *packet, PacketType pt);
+        bool SendPacket(const Packet *packet);
         bool doRecv();
 
         bool isListener();
