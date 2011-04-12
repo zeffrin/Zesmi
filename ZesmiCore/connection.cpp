@@ -57,12 +57,11 @@ Connection::Connection(char *port)
         if(iresult == SOCKET_ERROR)
         {
             log->writeToLog("Error: Unable to bind to port.\n");
-            freeaddrinfo(result);
             closesocket(sock);
             _connstate = CONNERROR;
         }
 
-        // Dont need this anymore, unsure whether need to remove above as well, meh
+        // Dont need this anymore
         freeaddrinfo(result);
 
         /* Set up queue for incoming connections. */
