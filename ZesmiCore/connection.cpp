@@ -162,13 +162,13 @@ bool Connection::doRecv()
         strncat(_sockbuf, buf, i);
 
         // Get Packet ID
-        char t;
-        sscanf(_sockbuf, "%c", &t);
+        char packetid;
+        sscanf(_sockbuf, "%c", &packetid);
         cp = _sockbuf;  // set cp to position in sockbuf
 
 
         char tmp[30];
-        sprintf(tmp, "Received packet: %d\n", t);
+        sprintf(tmp, "Received packet: %d\n", packetid);
         log->writeToLog(tmp);
         //log->writeLogFile("Received packet %c", t);  // TODO make this happen.. C++ varargs?
 
@@ -176,7 +176,7 @@ bool Connection::doRecv()
         //TODO will want to loop through buffer and leave remainder somewhere
         Packet *p;
 
-        switch(t)
+        switch(packetid)
         {
             case P_KEEPALIVE:
             {
@@ -189,7 +189,7 @@ bool Connection::doRecv()
             {
                 Login *t = new Login;
                 // TODO if args from sscanf correct bla if not bla
-                sscanf(cp,"%c%d%64s%64s%ld%c", &(t->PacketID), &(t->ProtocolVersion), t->Username, t->VerificationKey, &(t->MapSeed), &(t->Dimension));
+                sscanf(cp,"%c%d%64s%64s%ld%c", &(t->PacketID), &(t->ProtocolVersion),t->Username, t->VerificationKey, &(t->MapSeed), &(t->Dimension));
                 cp += sizeof(Login);
                 p = (Packet*)t;
                 break;
@@ -201,10 +201,6 @@ bool Connection::doRecv()
                 sscanf(cp, "%c%s", &(t->PacketID), t->Username);
                 cp += sizeof(HandShake);
                 p = (Packet*)t;
-                HandShake h;
-                h.PacketID = t->PacketID;
-                strcpy(h.Username, "Zeff test");
-                SendPacket((Packet*)&h);
                 break;
 
             }
@@ -287,7 +283,7 @@ bool Connection::SendPacket(const Packet *p) // TODO Make PacketType enum right,
         case P_HANDSHAKE:
             HandShake *t;
             t = (HandShake*)p;
-            sprintf(buf, "%c%64s", t->PacketID, t->Username);
+            sprintf(buf, "%c%-64s", t->PacketID, t->Username);
             break;
         default:
             log->writeToLog("Trying to send unknown packet\n");
@@ -296,8 +292,9 @@ bool Connection::SendPacket(const Packet *p) // TODO Make PacketType enum right,
     }
     send(sock, buf, strlen(buf) + 1, 0); // need to do error checking
     log->writeToLog("Sending to client: ");
+    sprintf(buf, "%d%s\n", p->PacketID, buf);
     log->writeToLog(buf);
-    log->writeToLog("\n");
+
 
 
 }
