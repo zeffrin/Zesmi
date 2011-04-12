@@ -182,7 +182,7 @@ bool Connection::doRecv()
             {
                 KeepAlive k;
                 k.PacketID = 0;
-                SendPacket((Packet*)&k);
+                SendPacket((Packet*)&k); // TODO remove testing, packets should be handled in consumer processes
                 break;
             }
             case P_LOGIN:
@@ -193,6 +193,20 @@ bool Connection::doRecv()
                 cp += sizeof(Login);
                 p = (Packet*)t;
                 break;
+            }
+            case P_HANDSHAKE:
+            {
+                HandShake *t = new HandShake;
+                // TODO if args from sscanf correct bla if not bla
+                sscanf(cp, "%c%s", &(t->PacketID), t->Username);
+                cp += sizeof(HandShake);
+                p = (Packet*)t;
+                HandShake h;
+                h.PacketID = t->PacketID;
+                strcpy(h.Username, "Zeff test");
+                SendPacket((Packet*)&h);
+                break;
+
             }
             case P_PLAYERLOOKMOVE:
             {
@@ -269,6 +283,11 @@ bool Connection::SendPacket(const Packet *p) // TODO Make PacketType enum right,
     {
         case P_KEEPALIVE:
             *buf = '\0';
+            break;
+        case P_HANDSHAKE:
+            HandShake *t;
+            t = (HandShake*)p;
+            sprintf(buf, "%c%64s", t->PacketID, t->Username);
             break;
         default:
             log->writeToLog("Trying to send unknown packet\n");
