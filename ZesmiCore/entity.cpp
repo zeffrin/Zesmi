@@ -23,7 +23,7 @@ Vector Entity::getVector()
 
 Vector Entity::setVector(Vector v)
 {
-    return (_vector += v);
+    return (_vector = v); // TODO += not exist for Vector..
 }
 
 Vector Entity::moveVector(Vector v)
@@ -36,7 +36,12 @@ Position Entity::getPosition()
     return *((Position *)&_vector);
 }
 
-        Vector getVector();
+Position Entity::setPosition(Position p)
+{
+    return (*((Position *)&_vector) = p);
+}
 
-//Position Entity::setPosition(Position p); TODO implement
-//Position Entity::movePosition(Position p); TODO implment
+Position Entity::movePosition(Position p)
+{
+    return (*((Position *)&_vector) += p); // TODO += not exist for Position...
+}
