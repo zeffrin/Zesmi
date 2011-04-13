@@ -85,6 +85,13 @@ typedef struct
 typedef struct
 {
     byte PacketID;
+    char Username[64];
+
+} HandShake;
+
+typedef struct
+{
+    byte PacketID;
     double X;
     double Y;
     double Stance;
