@@ -2,7 +2,6 @@
 #include "initialize.hpp"
 #include "logger.hpp"
 #include "connectioncontroller.hpp"
-#include "ANSI.h"
 
 #include <assert.h>
 #include <list>
@@ -27,14 +26,14 @@ static fn tests[] = {
 char *testnames[] = {
     // And here as strings
     "testVectorAssignment - Tests assignment overload for Vector class",
-    "testVectorAddAssign - Tests += overload for Vector class",
+    "testVectorAddAssign  - Tests += overload for Vector class",
 };
 
 int main(void)
 {
     for(int i = 0; tests[i] != NULL; i++)
     {
-        printf("Running %s%*s:   ", testnames[i], 60 - strlen(testnames[i]), " ");
+        printf("%s%*s:   ", testnames[i], 69 - strlen(testnames[i]), "");
         if(tests[i]() == 0)
         {
             printf("PASSED\n");
