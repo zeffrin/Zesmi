@@ -1,239 +1,15 @@
 # depslib dependency file v1.0
-1301802530 source:c:\users\zeffrin\documents\projects\Zesmicore\unittests.cpp
-	"initialize.hpp"
-	"connectioncontroller.hpp"
-
-1301805095 c:\users\zeffrin\documents\projects\Zesmicore\initialize.hpp
-	<sys/types.h>
-	<sys/socket.h>
-	<winsock2.h>
-	<ws2tcpip.h>
-
-1301830462 c:\users\zeffrin\documents\projects\Zesmicore\connectioncontroller.hpp
-	<list>
-	"connection.hpp"
-
-1301836451 c:\users\zeffrin\documents\projects\Zesmicore\connection.hpp
-	<sys/types.h>
-	<sys/socket.h>
-	<winsock2.h>
-	<ws2tcpip.h>
-	<list>
-	"block.hpp"
-	"packet.hpp"
-
-1301748919 c:\users\zeffrin\documents\projects\Zesmicore\block.hpp
-
-1301749412 c:\users\zeffrin\documents\projects\Zesmicore\packet.hpp
-
-1301749237 source:c:\users\zeffrin\documents\projects\Zesmicore\block.cpp
+1302005835 source:c:\users\zeffrin\zesmi\zesmicore\block.cpp
 	"block.hpp"
 
-1301836573 source:c:\users\zeffrin\documents\projects\Zesmicore\connection.cpp
-	<stdio.h>
-	"connection.hpp"
+1302005835 c:\users\zeffrin\zesmi\zesmicore\block.hpp
 
-1301802510 source:c:\users\zeffrin\documents\projects\Zesmicore\connectioncontroller.cpp
+1302609067 source:c:\users\zeffrin\zesmi\zesmicore\connectioncontroller.cpp
 	"connectioncontroller.hpp"
 
-1301805179 source:c:\users\zeffrin\documents\projects\Zesmicore\initialize.cpp
-	"initialize.hpp"
-
-1301750989 source:c:\users\zeffrin\documents\projects\Zesmicore\living.cpp
-	"living.hpp"
-
-1301749286 c:\users\zeffrin\documents\projects\Zesmicore\living.hpp
-
-1301749147 source:c:\users\zeffrin\documents\projects\Zesmicore\packet.cpp
-	"packet.hpp"
-
-1301747193 source:c:\users\zeffrin\documents\projects\Zesmicore\player.cpp
-	"player.hpp"
-
-1301803654 c:\users\zeffrin\documents\projects\Zesmicore\player.hpp
-	"living.hpp"
-	"connection.hpp"
-
-1301836573 source:c:\users\zeffrin\documents\projects\zesmicore\connection.cpp
-	<stdio.h>
-	"connection.hpp"
-
-1301836451 c:\users\zeffrin\documents\projects\zesmicore\connection.hpp
-	<sys/types.h>
-	<sys/socket.h>
-	<winsock2.h>
-	<ws2tcpip.h>
-	<list>
-	"block.hpp"
-	"packet.hpp"
-
-1301748919 c:\users\zeffrin\documents\projects\zesmicore\block.hpp
-
-1301749412 c:\users\zeffrin\documents\projects\zesmicore\packet.hpp
-
-1301836667 source:c:\users\zeffrin\documents\projects\zesmicore\connectioncontroller.cpp
-	"connectioncontroller.hpp"
-
-1301835777 c:\users\zeffrin\documents\projects\zesmicore\connectioncontroller.hpp
+1302609024 c:\users\zeffrin\zesmi\zesmicore\connectioncontroller.hpp
 	<list>
 	"connection.hpp"
-
-1301805179 source:c:\users\zeffrin\documents\projects\zesmicore\initialize.cpp
-	"initialize.hpp"
-
-1301805095 c:\users\zeffrin\documents\projects\zesmicore\initialize.hpp
-	<sys/types.h>
-	<sys/socket.h>
-	<winsock2.h>
-	<ws2tcpip.h>
-
-1301750989 source:c:\users\zeffrin\documents\projects\zesmicore\living.cpp
-	"living.hpp"
-
-1301749286 c:\users\zeffrin\documents\projects\zesmicore\living.hpp
-
-1301749147 source:c:\users\zeffrin\documents\projects\zesmicore\packet.cpp
-	"packet.hpp"
-
-1301747193 source:c:\users\zeffrin\documents\projects\zesmicore\player.cpp
-	"player.hpp"
-
-1301803654 c:\users\zeffrin\documents\projects\zesmicore\player.hpp
-	"living.hpp"
-	"connection.hpp"
-
-1301749237 source:c:\users\zeffrin\documents\projects\zesmicore\block.cpp
-	"block.hpp"
-
-1301836037 source:c:\users\zeffrin\documents\projects\zesmicore\unittests.cpp
-	"initialize.hpp"
-	"connectioncontroller.hpp"
-
-1301958909 source:c:\users\bens\zesmi\zesmi\zesmicore\connection.cpp
-	<stdio.h>
-	"connection.hpp"
-
-1301899148 c:\users\bens\zesmi\zesmi\zesmicore\connection.hpp
-	<sys/types.h>
-	<sys/socket.h>
-	<winsock2.h>
-	<ws2tcpip.h>
-	<list>
-	"block.hpp"
-	"packet.hpp"
-
-1301899148 c:\users\bens\zesmi\zesmi\zesmicore\block.hpp
-
-1301899148 c:\users\bens\zesmi\zesmi\zesmicore\packet.hpp
-
-1301966368 source:c:\users\bens\zesmi\zesmi\zesmicore\connectioncontroller.cpp
-	"connectioncontroller.hpp"
-
-1301966476 c:\users\bens\zesmi\zesmi\zesmicore\connectioncontroller.hpp
-	<list>
-	"connection.hpp"
-
-1301899148 source:c:\users\bens\zesmi\zesmi\zesmicore\initialize.cpp
-	"initialize.hpp"
-
-1301899148 c:\users\bens\zesmi\zesmi\zesmicore\initialize.hpp
-	<sys/types.h>
-	<sys/socket.h>
-	<winsock2.h>
-	<ws2tcpip.h>
-
-1301899148 source:c:\users\bens\zesmi\zesmi\zesmicore\living.cpp
-	"living.hpp"
-
-1301899148 c:\users\bens\zesmi\zesmi\zesmicore\living.hpp
-
-1301899148 source:c:\users\bens\zesmi\zesmi\zesmicore\packet.cpp
-	"packet.hpp"
-
-1301899148 source:c:\users\bens\zesmi\zesmi\zesmicore\player.cpp
-	"player.hpp"
-
-1301899148 c:\users\bens\zesmi\zesmi\zesmicore\player.hpp
-	"living.hpp"
-	"connection.hpp"
-
-1301899148 source:c:\users\bens\zesmi\zesmi\zesmicore\block.cpp
-	"block.hpp"
-
-1301966154 source:c:\users\bens\zesmi\zesmi\zesmicore\logger.cpp
-	"logger.hpp"
-	"stdio.h"
-
-1301966555 c:\users\bens\zesmi\zesmi\zesmicore\logger.hpp
-	"connectioncontroller.hpp"
-
-1301966865 source:c:\users\bens\zesmi\zesmi\zesmicore\unittests.cpp
-	"initialize.hpp"
-	"logger.hpp"
-	"connectioncontroller.hpp"
-
-1302047106 source:c:\users\bens\zesmi\zesmicore\connection.cpp
-	<stdio.h>
-	"connection.hpp"
-
-1302047106 c:\users\bens\zesmi\zesmicore\connection.hpp
-	<sys/types.h>
-	<sys/socket.h>
-	<winsock2.h>
-	<ws2tcpip.h>
-	<list>
-	"block.hpp"
-	"packet.hpp"
-
-1302047106 c:\users\bens\zesmi\zesmicore\block.hpp
-
-1302047106 c:\users\bens\zesmi\zesmicore\packet.hpp
-
-1302047106 source:c:\users\bens\zesmi\zesmicore\connectioncontroller.cpp
-	"connectioncontroller.hpp"
-
-1302047106 c:\users\bens\zesmi\zesmicore\connectioncontroller.hpp
-	<list>
-	"connection.hpp"
-
-1302047106 source:c:\users\bens\zesmi\zesmicore\initialize.cpp
-	"initialize.hpp"
-
-1302047106 c:\users\bens\zesmi\zesmicore\initialize.hpp
-	<sys/types.h>
-	<sys/socket.h>
-	<winsock2.h>
-	<ws2tcpip.h>
-
-1302047106 source:c:\users\bens\zesmi\zesmicore\living.cpp
-	"living.hpp"
-
-1302047106 c:\users\bens\zesmi\zesmicore\living.hpp
-
-1302048488 source:c:\users\bens\zesmi\zesmicore\logger.cpp
-	"logger.hpp"
-
-1302048455 c:\users\bens\zesmi\zesmicore\logger.hpp
-	<stdio.h>
-	"connectioncontroller.hpp"
-
-1302047106 source:c:\users\bens\zesmi\zesmicore\packet.cpp
-	"packet.hpp"
-
-1302047106 source:c:\users\bens\zesmi\zesmicore\player.cpp
-	"player.hpp"
-
-1302047106 c:\users\bens\zesmi\zesmicore\player.hpp
-	"living.hpp"
-	"connection.hpp"
-
-1302047106 source:c:\users\bens\zesmi\zesmicore\block.cpp
-	"block.hpp"
-
-1302784318 source:c:\users\zeffrin\zesmi\zesmicore\connection.cpp
-	<stdio.h>
-	"connection.hpp"
-	"logger.hpp"
 
 1302610549 c:\users\zeffrin\zesmi\zesmicore\connection.hpp
 	<sys/types.h>
@@ -244,16 +20,7 @@
 	"block.hpp"
 	"packet.hpp"
 
-1302005835 c:\users\zeffrin\zesmi\zesmicore\block.hpp
-
 1302727491 c:\users\zeffrin\zesmi\zesmicore\packet.hpp
-
-1302609067 source:c:\users\zeffrin\zesmi\zesmicore\connectioncontroller.cpp
-	"connectioncontroller.hpp"
-
-1302609024 c:\users\zeffrin\zesmi\zesmicore\connectioncontroller.hpp
-	<list>
-	"connection.hpp"
 
 1302005835 source:c:\users\zeffrin\zesmi\zesmicore\initialize.cpp
 	"initialize.hpp"
@@ -264,10 +31,17 @@
 	<winsock2.h>
 	<ws2tcpip.h>
 
-1302784318 source:c:\users\zeffrin\zesmi\zesmicore\living.cpp
+1302784857 source:c:\users\zeffrin\zesmi\zesmicore\living.cpp
 	"living.hpp"
 
-1302784687 c:\users\zeffrin\zesmi\zesmicore\living.hpp
+1302785513 c:\users\zeffrin\zesmi\zesmicore\living.hpp
+
+1302786729 source:c:\users\zeffrin\zesmi\zesmicore\logger.cpp
+	"logger.hpp"
+
+1302728104 c:\users\zeffrin\zesmi\zesmicore\logger.hpp
+	<stdio.h>
+	"connectioncontroller.hpp"
 
 1302444070 source:c:\users\zeffrin\zesmi\zesmicore\packet.cpp
 	"packet.hpp"
@@ -279,23 +53,22 @@
 	"living.hpp"
 	"connection.hpp"
 
-1302005835 source:c:\users\zeffrin\zesmi\zesmicore\block.cpp
-	"block.hpp"
-
-1302728104 source:c:\users\zeffrin\zesmi\zesmicore\logger.cpp
-	"logger.hpp"
-
-1302728104 c:\users\zeffrin\zesmi\zesmicore\logger.hpp
-	<stdio.h>
-	"connectioncontroller.hpp"
-
-1302509362 source:c:\users\zeffrin\zesmi\zesmicore\unittests.cpp
+1302786694 source:c:\users\zeffrin\zesmi\zesmicore\unittests.cpp
 	"initialize.hpp"
-	"logger.hpp"
 	"connectioncontroller.hpp"
+	"vector.hpp"
+	<stdio.h>
+	<string.h>
+	<assert.h>
+	<list>
 
-1302607927 c:\users\zeffrin\zesmi\zesmicore\vector.hpp
+1302786309 c:\users\zeffrin\zesmi\zesmicore\vector.hpp
 
-1302726433 c:\users\zeffrin\zesmi\zesmicore\entity.hpp
+1302785513 source:c:\users\zeffrin\zesmi\zesmicore\connection.cpp
+	<stdio.h>
+	"connection.hpp"
+	"logger.hpp"
+
+1302786309 source:c:\users\zeffrin\zesmi\zesmicore\vector.cpp
 	"vector.hpp"
 
