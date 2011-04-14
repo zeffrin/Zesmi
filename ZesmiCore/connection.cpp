@@ -2,9 +2,6 @@
 
 #include <stdio.h>
 #include "connection.hpp"
-#include "logger.hpp"
-
-static Logger::Logger *log = Logger::getInstance();
 
 Connection::Connection(char *hostname, char *port)
 {
@@ -37,7 +34,6 @@ Connection::Connection(char *port)
     int iresult = getaddrinfo(NULL, port, &hints, &result);
     if(iresult != 0)
     {
-        log->writeToLog("Unable to resolve localaddress and port\n");
         _connstate = CONNERROR;
     }
     else
@@ -48,7 +44,6 @@ Connection::Connection(char *port)
 
         if(sock == INVALID_SOCKET)
         {
-            log->writeToLog("Error: Invalid socket.\n");
             freeaddrinfo(result);
             _connstate = CONNERROR;
         }
@@ -56,7 +51,6 @@ Connection::Connection(char *port)
         iresult = bind(sock, result->ai_addr, (int)result->ai_addrlen);
         if(iresult == SOCKET_ERROR)
         {
-            log->writeToLog("Error: Unable to bind to port.\n");
             closesocket(sock);
             _connstate = CONNERROR;
         }
@@ -70,7 +64,6 @@ Connection::Connection(char *port)
             _connstate = LISTEN;
             listen(sock, 5);
         }
-        log->writeToLog("Listening on Port x.\n");
     }
 
 #else
@@ -121,8 +114,6 @@ Connection* Connection::doAccept()
     if(t == INVALID_SOCKET)
     {
         _connstate = CONNERROR;
-
-        LogSocketError();
         return NULL;
     }
     _connstate = OPEN;
@@ -155,7 +146,6 @@ bool Connection::doRecv()
         }
         if(i <= 0)
         {
-            log->writeToLog("Socket closed\n");
             goagain = false;
             return false;
         }
@@ -169,9 +159,6 @@ bool Connection::doRecv()
 
         char tmp[30];
         sprintf(tmp, "Received packet: %d\n", packetid);
-        log->writeToLog(tmp);
-        //log->writeLogFile("Received packet %c", t);  // TODO make this happen.. C++ varargs?
-
 
         //TODO will want to loop through buffer and leave remainder somewhere
         Packet *p = NULL;
@@ -238,40 +225,6 @@ bool Connection::doRecv()
 
 }
 
-void Connection::LogSocketError()
-{
-    switch(WSAGetLastError())
-    {
-        case WSANOTINITIALISED: log->writeToLog("A successful WSAStartup call must occur before using this function.\n");
-                                break;
-        case WSAECONNRESET:     log->writeToLog("An incoming connection was indicated, but was subsequently terminated by the remote peer prior to accepting the call.\n");
-                                break;
-        case WSAEFAULT:         log->writeToLog("The addrlen parameter is too small or addr is not a valid part of the user address space.\n");
-                                break;
-        case WSAEINTR:          log->writeToLog("A blocking Windows Sockets 1.1 call was canceled through WSACancelBlockingCall.\n");
-                                break;
-        case WSAEINVAL:         log->writeToLog("The listen function was not invoked prior to accept.\n");
-                                break;
-        case WSAEINPROGRESS:    log->writeToLog("A blocking Windows Sockets 1.1 call is in progress, or the service provider is still processing a callback function.\n");
-                                break;
-        case WSAEMFILE:         log->writeToLog("The queue is nonempty upon entry to accept and there are no descriptors available.\n");
-                                break;
-        case WSAENETDOWN:       log->writeToLog("The network subsystem has failed.\n");
-                                break;
-        case WSAENOBUFS:        log->writeToLog("No buffer space is available.\n");
-                                break;
-        case WSAENOTSOCK:       log->writeToLog("The descriptor is not a socket.\n");
-                                break;
-        case WSAEOPNOTSUPP:     log->writeToLog("The referenced socket is not a type that supports connection-oriented service.\n");
-                                break;
-        case WSAEWOULDBLOCK:    log->writeToLog("The socket is marked as nonblocking and no connections are present to be accepted.\n");
-                                break;
-        default:
-                                log->writeToLog("SOCKET Unknown error\n");
-                                break;
-    }
-}
-
 bool Connection::SendPacket(const Packet *p) // TODO Make PacketType enum right, and have a matching size array
 {
     char buf[1092];
@@ -286,14 +239,11 @@ bool Connection::SendPacket(const Packet *p) // TODO Make PacketType enum right,
             sprintf(buf, "%c%-64s", t->PacketID, t->Username);
             break;
         default:
-            log->writeToLog("Trying to send unknown packet\n");
             *buf = '\0';
             return false;
     }
     send(sock, buf, strlen(buf) + 1, 0); // need to do error checking
-    log->writeToLog("Sending to client: ");
     sprintf(buf, "%d%s\n", p->PacketID, buf);
-    log->writeToLog(buf);
     return true; // TODO error checking
 }
 
