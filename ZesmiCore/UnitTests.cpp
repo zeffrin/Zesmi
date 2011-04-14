@@ -11,9 +11,10 @@
 
 using namespace std;
 
-int testListenandAccept();
 int testVectorAssignment();
 int testVectorAddAssign();
+int testInitAndDeinit();
+int testConnectionSocketListen();
 
 typedef int (*fn)();
 
@@ -22,14 +23,18 @@ static fn tests[] = {
     //testListenandAccept,
     testVectorAssignment,
     testVectorAddAssign,
+    testInitAndDeinit,
+    testConnectionSocketListen,
     NULL
 
 };
 
 char *testnames[] = {
     // And here as strings
-    "Testing = overload for Vector class",
-    "Testing += overload for Vector class",
+    "Test = overload for Vector class",
+    "Test += overload for Vector class",
+    "Test Initialisation and Deinitialisation",
+    "Test Opening a listening tcp socket"
 };
 
 int main(void)
@@ -90,6 +95,38 @@ int testVectorAddAssign()
         return 1;
     }
     return 0;
+}
+
+int testInitAndDeinit()
+{
+    Initialize *init = new Initialize();
+    bool result = init->doInitialization();
+    delete init;
+    if(!result)
+        return 1;
+    else
+        return 0;
+}
+
+int testConnectionSocketListen()
+{
+    Initialize *init = new Initialize();
+    bool result = init->doInitialization();
+    ConnectionController *conns = ConnectionController::getInstance();
+    Connection *PlayerListener;
+
+    if((PlayerListener = conns->startListen("1022")))
+        result = true;
+    else
+        result = false;
+
+    delete conns;
+    delete init;
+
+    if(!result)
+        return 1;
+    else
+        return 0;
 }
 
 // TODO fix this test to be listen and connect test
