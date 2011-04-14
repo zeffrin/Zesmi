@@ -92,6 +92,14 @@
 			<Option target="Release" />
 			<Option target="Debug" />
 		</Unit>
+		<Unit filename="entity.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="entity.hpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
 		<Unit filename="initialize.cpp">
 			<Option target="Release" />
 			<Option target="Debug" />
@@ -131,6 +139,10 @@
 		<Unit filename="player.hpp">
 			<Option target="Release" />
 			<Option target="Debug" />
+		</Unit>
+		<Unit filename="vector.hpp">
+			<Option target="Debug" />
+			<Option target="Release" />
 		</Unit>
 		<Extensions>
 			<code_completion />

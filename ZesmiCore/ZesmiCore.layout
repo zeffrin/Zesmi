@@ -1,58 +1,61 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
-	<ActiveTarget name="Test" />
+	<ActiveTarget name="Debug" />
 	<File name="UnitTests.cpp" open="1" top="0" tabpos="2">
-		<Cursor position="683" topLine="6" />
+		<Cursor position="497" topLine="5" />
 	</File>
-	<File name="block.cpp" open="0" top="0" tabpos="8">
+	<File name="block.cpp" open="1" top="0" tabpos="15">
 		<Cursor position="95" topLine="0" />
 	</File>
 	<File name="block.hpp" open="0" top="0" tabpos="7">
 		<Cursor position="202" topLine="0" />
 	</File>
-	<File name="configuration.hpp" open="0" top="0" tabpos="14">
+	<File name="configuration.hpp" open="1" top="0" tabpos="16">
 		<Cursor position="74" topLine="0" />
 	</File>
-	<File name="connection.cpp" open="1" top="1" tabpos="4">
-		<Cursor position="3871" topLine="174" />
+	<File name="connection.cpp" open="1" top="0" tabpos="4">
+		<Cursor position="7826" topLine="228" />
 	</File>
 	<File name="connection.hpp" open="1" top="0" tabpos="3">
-		<Cursor position="1327" topLine="45" />
+		<Cursor position="1222" topLine="45" />
 	</File>
 	<File name="connectioncontroller.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="3596" topLine="112" />
+		<Cursor position="475" topLine="33" />
 	</File>
-	<File name="connectioncontroller.hpp" open="0" top="0" tabpos="15">
-		<Cursor position="944" topLine="9" />
+	<File name="connectioncontroller.hpp" open="1" top="0" tabpos="14">
+		<Cursor position="554" topLine="9" />
 	</File>
 	<File name="initialize.cpp" open="1" top="0" tabpos="7">
 		<Cursor position="768" topLine="27" />
 	</File>
-	<File name="initialize.hpp" open="0" top="0" tabpos="13">
+	<File name="initialize.hpp" open="1" top="0" tabpos="10">
 		<Cursor position="457" topLine="0" />
 	</File>
-	<File name="living.cpp" open="0" top="0" tabpos="4">
-		<Cursor position="53" topLine="0" />
+	<File name="living.cpp" open="1" top="0" tabpos="12">
+		<Cursor position="281" topLine="0" />
 	</File>
-	<File name="living.hpp" open="0" top="0" tabpos="3">
-		<Cursor position="230" topLine="0" />
+	<File name="living.hpp" open="1" top="0" tabpos="11">
+		<Cursor position="294" topLine="0" />
 	</File>
-	<File name="logger.cpp" open="1" top="0" tabpos="5">
-		<Cursor position="433" topLine="27" />
+	<File name="logger.cpp" open="1" top="1" tabpos="5">
+		<Cursor position="933" topLine="0" />
 	</File>
-	<File name="logger.hpp" open="0" top="0" tabpos="11">
-		<Cursor position="300" topLine="0" />
+	<File name="logger.hpp" open="1" top="0" tabpos="17">
+		<Cursor position="404" topLine="0" />
 	</File>
 	<File name="packet.cpp" open="1" top="0" tabpos="8">
 		<Cursor position="92" topLine="0" />
 	</File>
 	<File name="packet.hpp" open="1" top="0" tabpos="6">
-		<Cursor position="1534" topLine="58" />
+		<Cursor position="1260" topLine="61" />
 	</File>
 	<File name="player.cpp" open="0" top="0" tabpos="1">
 		<Cursor position="27" topLine="0" />
 	</File>
 	<File name="player.hpp" open="1" top="0" tabpos="9">
 		<Cursor position="47" topLine="0" />
+	</File>
+	<File name="vector.hpp" open="1" top="0" tabpos="13">
+		<Cursor position="274" topLine="0" />
 	</File>
 </CodeBlocks_layout_file>

@@ -5,11 +5,6 @@ Living::Living()
 {
     _health = 100;
     _armor = 0;
-    _vector.X = 0;
-    _vector.Y = 0;
-    _vector.Z = 0;
-    _vector.Pitch = 0;
-    _vector.Yaw = 0;
 }
 
 Living::~Living()
@@ -37,12 +32,3 @@ void Living::takeDamage(int damage)
     }
 }
 
-Vector Living::getVector()
-{
-    return _vector;
-}
-
-Position Living::getPosition()
-{
-    return *((Position *)&_vector);
-}

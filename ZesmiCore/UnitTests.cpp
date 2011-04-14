@@ -3,10 +3,67 @@
 #include "logger.hpp"
 #include "connectioncontroller.hpp"
 
+#include <assert.h>
+#include <list>
+
 using namespace std;
+
+int testListenandAccept();
+int testVectorAssignment();
+int testVectorAddition();
+
+typedef int (*fn)();
+
+static fn tests[] = {
+    // List tests here, if tests depend on some other functionality put them afterward
+    //testListenandAccept,
+    testVectorAssignment,
+    testVectorAddition,
+    NULL
+
+};
+
+char *testnames[] = {
+    // And here as strings
+    "testVectorAssignment - Tests assignment overload for Vector class",
+    "testVectorAddAssign  - Tests += overload for Vector class",
+};
 
 int main(void)
 {
+    for(int i = 0; tests[i] != NULL; i++)
+    {
+        printf("%s%*s:   ", testnames[i], 69 - strlen(testnames[i]), "");
+        if(tests[i]() == 0)
+        {
+            printf("PASSED\n");
+        }
+        else
+        {
+            printf("FAILED\n");
+            break;
+        }
+    }
+    int t;
+    fscanf(stdin, "%c", &t);
+}
+
+int testVectorAssignment()
+{
+    return 0;
+}
+
+int testVectorAddition()
+{
+    return 1;
+}
+
+// TODO fix this test to be listen and connect test
+/*
+
+int testListenandAccept() {
+    printf("testListenandAccept: ");
+
     Initialize *init = new Initialize();
     bool result = init->doInitialization();
     Logger *log = Logger::getInstance();
@@ -15,6 +72,7 @@ int main(void)
     if(!result)
     {
         // TODO send to logger
+        return 1;
     }
 
     ConnectionController *conns = ConnectionController::getInstance();
@@ -48,5 +106,7 @@ int main(void)
     delete conns;
     delete init;
 
+    return 0;
 
 }
+*/
