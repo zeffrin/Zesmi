@@ -1,9 +1,8 @@
 #ifndef LIVING_HPP_INCLUDED
 #define LIVING_HPP_INCLUDED
 
-#include "entity.hpp"
 
-class Living : public Entity
+class Living
 {
     public:
         Living();
