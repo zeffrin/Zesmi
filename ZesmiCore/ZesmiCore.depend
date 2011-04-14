@@ -1,17 +1,28 @@
 # depslib dependency file v1.0
 1302005835 source:c:\users\zeffrin\zesmi\zesmicore\block.cpp
 	"block.hpp"
+	"block.hpp"
 
 1302005835 c:\users\zeffrin\zesmi\zesmicore\block.hpp
 
 1302609067 source:c:\users\zeffrin\zesmi\zesmicore\connectioncontroller.cpp
 	"connectioncontroller.hpp"
+	"connectioncontroller.hpp"
 
 1302609024 c:\users\zeffrin\zesmi\zesmicore\connectioncontroller.hpp
 	<list>
 	"connection.hpp"
+	<list>
+	"connection.hpp"
 
 1302610549 c:\users\zeffrin\zesmi\zesmicore\connection.hpp
+	<sys/types.h>
+	<sys/socket.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<list>
+	"block.hpp"
+	"packet.hpp"
 	<sys/types.h>
 	<sys/socket.h>
 	<winsock2.h>
@@ -24,8 +35,13 @@
 
 1302005835 source:c:\users\zeffrin\zesmi\zesmicore\initialize.cpp
 	"initialize.hpp"
+	"initialize.hpp"
 
 1302005835 c:\users\zeffrin\zesmi\zesmicore\initialize.hpp
+	<sys/types.h>
+	<sys/socket.h>
+	<winsock2.h>
+	<ws2tcpip.h>
 	<sys/types.h>
 	<sys/socket.h>
 	<winsock2.h>
@@ -34,9 +50,10 @@
 1302784857 source:c:\users\zeffrin\zesmi\zesmicore\living.cpp
 	"living.hpp"
 
-1302785513 c:\users\zeffrin\zesmi\zesmicore\living.hpp
+1302788073 c:\users\zeffrin\zesmi\zesmicore\living.hpp
+	"entity.hpp"
 
-1302786729 source:c:\users\zeffrin\zesmi\zesmicore\logger.cpp
+1302787685 source:c:\users\zeffrin\zesmi\zesmicore\logger.cpp
 	"logger.hpp"
 
 1302728104 c:\users\zeffrin\zesmi\zesmicore\logger.hpp
@@ -45,15 +62,19 @@
 
 1302444070 source:c:\users\zeffrin\zesmi\zesmicore\packet.cpp
 	"packet.hpp"
+	"packet.hpp"
 
 1302005835 source:c:\users\zeffrin\zesmi\zesmicore\player.cpp
+	"player.hpp"
 	"player.hpp"
 
 1302005835 c:\users\zeffrin\zesmi\zesmicore\player.hpp
 	"living.hpp"
 	"connection.hpp"
+	"living.hpp"
+	"connection.hpp"
 
-1302786694 source:c:\users\zeffrin\zesmi\zesmicore\unittests.cpp
+1302509362 source:c:\users\zeffrin\zesmi\zesmicore\unittests.cpp
 	"initialize.hpp"
 	"connectioncontroller.hpp"
 	"vector.hpp"
@@ -61,86 +82,32 @@
 	<string.h>
 	<assert.h>
 	<list>
+	"initialize.hpp"
+	"logger.hpp"
+	"connectioncontroller.hpp"
 
-1302786309 c:\users\zeffrin\zesmi\zesmicore\vector.hpp
+1302787538 c:\users\zeffrin\zesmi\zesmicore\vector.hpp
 
-<<<<<<< HEAD
-1302785513 source:c:\users\zeffrin\zesmi\zesmicore\connection.cpp
-=======
-1302623002 source:c:\users\zeffrin\zesmi\zesmicore\connection.cpp
->>>>>>> a5e7587... Create entity and inherit it into living.
+1302623002 D
+
+1302787538 source:c:\users\zeffrin\zesmi\zesmicore\connection.cpp
 	<stdio.h>
 	"connection.hpp"
 	"logger.hpp"
 
-<<<<<<< HEAD
+1302726433 7587... Create entity and inherit it into living.
+	<stdio.h>
+	"connection.hpp"
+	"logger.hpp"
+
 1302786309 source:c:\users\zeffrin\zesmi\zesmicore\vector.cpp
 	"vector.hpp"
 
-=======
-1302610549 c:\users\zeffrin\zesmi\zesmicore\connection.hpp
-	<sys/types.h>
-	<sys/socket.h>
-	<winsock2.h>
-	<ws2tcpip.h>
-	<list>
-	"block.hpp"
-	"packet.hpp"
+1302786309 p"
 
-1302005835 c:\users\zeffrin\zesmi\zesmicore\block.hpp
-
-1302619762 c:\users\zeffrin\zesmi\zesmicore\packet.hpp
-
-1302609067 source:c:\users\zeffrin\zesmi\zesmicore\connectioncontroller.cpp
-	"connectioncontroller.hpp"
-
-1302609024 c:\users\zeffrin\zesmi\zesmicore\connectioncontroller.hpp
-	<list>
-	"connection.hpp"
-
-1302005835 source:c:\users\zeffrin\zesmi\zesmicore\initialize.cpp
-	"initialize.hpp"
-
-1302005835 c:\users\zeffrin\zesmi\zesmicore\initialize.hpp
-	<sys/types.h>
-	<sys/socket.h>
-	<winsock2.h>
-	<ws2tcpip.h>
-
-1302608187 source:c:\users\zeffrin\zesmi\zesmicore\living.cpp
-	"living.hpp"
-
-1302726276 c:\users\zeffrin\zesmi\zesmicore\living.hpp
-	"entity.hpp"
-
-1302444070 source:c:\users\zeffrin\zesmi\zesmicore\packet.cpp
-	"packet.hpp"
-
-1302005835 source:c:\users\zeffrin\zesmi\zesmicore\player.cpp
-	"player.hpp"
-
-1302005835 c:\users\zeffrin\zesmi\zesmicore\player.hpp
-	"living.hpp"
-	"connection.hpp"
-
-1302005835 source:c:\users\zeffrin\zesmi\zesmicore\block.cpp
-	"block.hpp"
-
-1302615419 source:c:\users\zeffrin\zesmi\zesmicore\logger.cpp
-	"logger.hpp"
-
-1302615419 c:\users\zeffrin\zesmi\zesmicore\logger.hpp
-	<stdio.h>
-	"connectioncontroller.hpp"
-
-1302509362 source:c:\users\zeffrin\zesmi\zesmicore\unittests.cpp
-	"initialize.hpp"
-	"logger.hpp"
-	"connectioncontroller.hpp"
-
-1302607927 c:\users\zeffrin\zesmi\zesmicore\vector.hpp
-
-1302726433 c:\users\zeffrin\zesmi\zesmicore\entity.hpp
+1302787812 c:\users\zeffrin\zesmi\zesmicore\entity.hpp
 	"vector.hpp"
 
->>>>>>> a5e7587... Create entity and inherit it into living.
+1302787812 source:c:\users\zeffrin\zesmi\zesmicore\entity.cpp
+	"entity.hpp"
+
