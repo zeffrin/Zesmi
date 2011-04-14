@@ -17,9 +17,9 @@ class ConnectionController
     public:
 
         static ConnectionController *getInstance();
-        Connection* startListen(char *port);
-        void stopListen(Connection *conn);
-        //Connection* connect(short int *port);
+        Connection* doListen(char *port);
+        void endListen(Connection *conn);
+        void doConnect(char *host, char *port);
         bool doSelect();
         void doAccept();
         void doSend();

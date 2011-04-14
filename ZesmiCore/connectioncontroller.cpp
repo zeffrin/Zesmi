@@ -38,7 +38,7 @@ ConnectionController* ConnectionController::getInstance()
 
 }
 
-Connection* ConnectionController::startListen(char *port)
+Connection* ConnectionController::doListen(char *port)
 {
     Connection *c = new Connection(port);
     if(!c)
@@ -50,7 +50,7 @@ Connection* ConnectionController::startListen(char *port)
     return c;
 }
 
-void ConnectionController::stopListen(Connection *conn)
+void ConnectionController::endListen(Connection *conn)
 {
     _listenconns.remove(conn);
     FD_CLR(conn->getSocket(), &_fd_master);
