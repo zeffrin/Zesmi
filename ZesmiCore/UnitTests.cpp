@@ -15,6 +15,8 @@ int testVectorAssignment();
 int testVectorAddAssign();
 int testInitAndDeinit();
 int testConnectionSocketListen();
+int testConnectionSocketConnect();
+int testConnectionSocketendListen();
 
 typedef int (*fn)();
 
@@ -25,6 +27,8 @@ static fn tests[] = {
     testVectorAddAssign,
     testInitAndDeinit,
     testConnectionSocketListen,
+    testConnectionSocketConnect,
+    testConnectionSocketendListen,
     NULL
 
 };
@@ -34,7 +38,9 @@ char *testnames[] = {
     "Test = overload for Vector class",
     "Test += overload for Vector class",
     "Test Initialisation and Deinitialisation",
-    "Test Opening a listening tcp socket"
+    "Test Opening a listening tcp socket",
+    "Test connecting to a socket",
+    "Test closing a listening socket"
 };
 
 int main(void)
@@ -156,7 +162,41 @@ int testConnectionSocketConnect()
 
 }
 
-// TODO test for endListen once can connect()
+int testConnectionSocketendListen()
+{
+    Initialize *init = new Initialize();
+    bool result = init->doInitialization();
+    ConnectionController *conns = ConnectionController::getInstance();
+    Connection *PlayerListener;
+    Connection *c;
+
+    if(!result)
+        return 1;
+
+    if(!(PlayerListener = conns->doListen("1022")))
+        return 1;
+
+    if(!(c = conns->doConnect("localhost", "1022")))
+        return 1;
+
+    if (!(conns->doAccept()))
+        return 1;
+
+    if (!conns->endListen(PlayerListener))
+        return 1;
+
+    if(!(c = conns->doConnect("localhost", "1022")))
+        return 1;
+
+    if ((conns->doAccept()))
+        return 1;
+
+    delete conns;
+    delete init;
+
+    return 0;
+
+}
 
 
 
