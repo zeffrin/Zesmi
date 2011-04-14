@@ -174,7 +174,7 @@ bool Connection::doRecv()
 
 
         //TODO will want to loop through buffer and leave remainder somewhere
-        Packet *p;
+        Packet *p = NULL;
 
         switch(packetid)
         {
@@ -294,9 +294,7 @@ bool Connection::SendPacket(const Packet *p) // TODO Make PacketType enum right,
     log->writeToLog("Sending to client: ");
     sprintf(buf, "%d%s\n", p->PacketID, buf);
     log->writeToLog(buf);
-
-
-
+    return true; // TODO error checking
 }
 
 
