@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
-	<ActiveTarget name="Test" />
+	<ActiveTarget name="Debug" />
 	<File name="UnitTests.cpp" open="1" top="0" tabpos="2">
+<<<<<<< HEAD
 		<Cursor position="749" topLine="1" />
+=======
+		<Cursor position="497" topLine="5" />
+>>>>>>> a5e7587... Create entity and inherit it into living.
 	</File>
 	<File name="block.cpp" open="1" top="0" tabpos="15">
 		<Cursor position="95" topLine="0" />
@@ -14,7 +18,11 @@
 		<Cursor position="74" topLine="0" />
 	</File>
 	<File name="connection.cpp" open="1" top="0" tabpos="4">
+<<<<<<< HEAD
 		<Cursor position="1971" topLine="46" />
+=======
+		<Cursor position="7826" topLine="228" />
+>>>>>>> a5e7587... Create entity and inherit it into living.
 	</File>
 	<File name="connection.hpp" open="1" top="0" tabpos="3">
 		<Cursor position="1222" topLine="45" />
@@ -24,12 +32,15 @@
 	</File>
 	<File name="connectioncontroller.hpp" open="1" top="0" tabpos="14">
 		<Cursor position="554" topLine="9" />
+<<<<<<< HEAD
 	</File>
 	<File name="entity.cpp" open="1" top="0" tabpos="18">
 		<Cursor position="188" topLine="4" />
 	</File>
 	<File name="entity.hpp" open="0" top="0" tabpos="21">
 		<Cursor position="382" topLine="0" />
+=======
+>>>>>>> a5e7587... Create entity and inherit it into living.
 	</File>
 	<File name="initialize.cpp" open="1" top="0" tabpos="7">
 		<Cursor position="768" topLine="27" />
@@ -38,13 +49,22 @@
 		<Cursor position="457" topLine="0" />
 	</File>
 	<File name="living.cpp" open="1" top="0" tabpos="12">
+<<<<<<< HEAD
 		<Cursor position="281" topLine="0" />
+=======
+		<Cursor position="281" topLine="14" />
+>>>>>>> a5e7587... Create entity and inherit it into living.
 	</File>
 	<File name="living.hpp" open="1" top="0" tabpos="11">
 		<Cursor position="294" topLine="0" />
 	</File>
+<<<<<<< HEAD
 	<File name="logger.cpp" open="1" top="0" tabpos="5">
 		<Cursor position="228" topLine="0" />
+=======
+	<File name="logger.cpp" open="1" top="1" tabpos="5">
+		<Cursor position="933" topLine="31" />
+>>>>>>> a5e7587... Create entity and inherit it into living.
 	</File>
 	<File name="logger.hpp" open="1" top="0" tabpos="17">
 		<Cursor position="404" topLine="0" />
@@ -61,10 +81,15 @@
 	<File name="player.hpp" open="1" top="0" tabpos="9">
 		<Cursor position="47" topLine="0" />
 	</File>
+<<<<<<< HEAD
 	<File name="vector.cpp" open="1" top="1" tabpos="18">
 		<Cursor position="384" topLine="0" />
 	</File>
 	<File name="vector.hpp" open="1" top="0" tabpos="13">
 		<Cursor position="393" topLine="0" />
+=======
+	<File name="vector.hpp" open="1" top="0" tabpos="13">
+		<Cursor position="274" topLine="0" />
+>>>>>>> a5e7587... Create entity and inherit it into living.
 	</File>
 </CodeBlocks_layout_file>

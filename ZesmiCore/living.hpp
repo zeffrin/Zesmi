@@ -1,8 +1,12 @@
 #ifndef LIVING_HPP_INCLUDED
 #define LIVING_HPP_INCLUDED
 
+<<<<<<< HEAD
+=======
+#include "entity.hpp"
+>>>>>>> a5e7587... Create entity and inherit it into living.
 
-class Living
+class Living : public Entity
 {
     public:
         Living();

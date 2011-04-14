@@ -140,10 +140,13 @@
 			<Option target="Release" />
 			<Option target="Debug" />
 		</Unit>
+<<<<<<< HEAD
 		<Unit filename="vector.cpp">
 			<Option target="Debug" />
 			<Option target="Release" />
 		</Unit>
+=======
+>>>>>>> a5e7587... Create entity and inherit it into living.
 		<Unit filename="vector.hpp">
 			<Option target="Debug" />
 			<Option target="Release" />
