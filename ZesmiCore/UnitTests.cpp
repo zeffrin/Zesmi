@@ -115,7 +115,7 @@ int testConnectionSocketListen()
     ConnectionController *conns = ConnectionController::getInstance();
     Connection *PlayerListener;
 
-    if((PlayerListener = conns->startListen("1022")))
+    if((PlayerListener = conns->doListen("1022")))
         result = true;
     else
         result = false;
@@ -128,6 +128,37 @@ int testConnectionSocketListen()
     else
         return 0;
 }
+
+int testConnectionSocketConnect()
+{
+    Initialize *init = new Initialize();
+    bool result = init->doInitialization();
+    ConnectionController *conns = ConnectionController::getInstance();
+    Connection *PlayerListener;
+    Connection *c;
+
+    if(!result)
+        return 1;
+
+    if(!(PlayerListener = conns->doListen("1022")))
+        return 1;
+
+    if(!(c = conns->doConnect("localhost", "1022")))
+        return 1;
+
+    if (!(conns->doAccept()))
+        return 1;
+
+    delete conns;
+    delete init;
+
+    return 0;
+
+}
+
+// TODO test for endListen once can connect()
+
+
 
 // TODO fix this test to be listen and connect test
 /*
