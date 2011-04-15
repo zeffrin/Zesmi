@@ -35,6 +35,7 @@ typedef enum cs
 {
     NEW,
     LISTEN,
+    ACCEPTING,
     OPEN,
     CLOSED,
     CONNERROR
@@ -43,9 +44,10 @@ typedef enum cs
 class Connection
 {
     public:
+        Connection(); // for handling incoming connections
         Connection(char *port);  //for tcp listening
         //Connection(char *pipename); // connect named pipe
-        Connection(char *hostname, char *port); // connect tcp
+        Connection(char *hostname, int port); // connect tcp
         Connection(SOCKET s); // for accepting connections
         ~Connection();
 
@@ -55,6 +57,7 @@ class Connection
         bool doRecv();
 
         bool isListener();
+        ConnectionState getState();
         SOCKET getSocket();
         SOCKET sock;
 

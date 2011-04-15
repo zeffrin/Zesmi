@@ -17,11 +17,11 @@ class ConnectionController
     public:
 
         static ConnectionController *getInstance();
-        Connection* startListen(char *port);
-        void stopListen(Connection *conn);
-        //Connection* connect(short int *port);
+        Connection* doListen(char *port);
+        void endListen(Connection *conn);
+        Connection* doConnect(char *host, int port);
         bool doSelect();
-        void doAccept();
+        int doAccept();
         void doSend();
         void doRecv();
         void doError();
@@ -31,6 +31,7 @@ class ConnectionController
 
     protected:
         ConnectionController();
+
 
         static ConnectionController *_instance;
 

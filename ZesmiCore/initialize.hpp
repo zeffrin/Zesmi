@@ -23,11 +23,13 @@ class Initialize
 {
 
     public:
-        Initialize();
+        static Initialize* getInstance();
         ~Initialize();
         bool doInitialization();
 
     private:
+        Initialize();
+
         bool init_win();
         bool init_linux();
         bool init_macosx();
@@ -35,6 +37,8 @@ class Initialize
         bool cleanup_win();
         bool cleanup_linux();
         bool cleanup_macosx();
+
+        static Initialize* _instance;
 
 };
 

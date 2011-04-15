@@ -3,8 +3,54 @@
 #include <stdio.h>
 #include "connection.hpp"
 
-Connection::Connection(char *hostname, char *port)
+Connection::Connection()
 {
+    // For handling an in progress connection
+
+    sock = NULL;
+    _connstate = ACCEPTING;
+
+}
+
+Connection::Connection(char *hostname, int port)
+{
+
+    sock = INVALID_SOCKET;
+    sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (sock == INVALID_SOCKET)
+    {
+        sock = NULL;
+        _connstate = CONNERROR;
+        return;
+    }
+
+    SOCKADDR_IN addr;
+    addr.sin_family     = AF_INET;
+    addr.sin_port       = htons(port);
+    if ((addr.sin_addr.s_addr = inet_addr(hostname)) == -1)
+    {
+        struct hostent *hs;
+        if ((hs = gethostbyname(hostname)) == NULL)
+        {
+            sock = NULL;
+            _connstate = CONNERROR;
+            return;
+        }
+        addr.sin_family = hs->h_addrtype;
+        memcpy((void *)&addr.sin_addr.s_addr, hs->h_addr, hs->h_length);
+    }
+    if (connect(sock, (LPSOCKADDR)&addr, sizeof(addr)) == SOCKET_ERROR)
+    {
+
+        int error = WSAGetLastError();
+
+        sock = NULL;
+        _connstate = CONNERROR;
+        return;
+    }
+
+    u_long iMode=1;
+    ioctlsocket(sock, FIONBIO,&iMode);
 
     _connstate = OPEN;
 
@@ -38,13 +84,11 @@ Connection::Connection(char *port)
     }
     else
     {
-
         sock = INVALID_SOCKET;
         sock = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
-
         if(sock == INVALID_SOCKET)
         {
-            freeaddrinfo(result);
+            sock = NULL;
             _connstate = CONNERROR;
         }
 
@@ -52,6 +96,7 @@ Connection::Connection(char *port)
         if(iresult == SOCKET_ERROR)
         {
             closesocket(sock);
+            sock = NULL;
             _connstate = CONNERROR;
         }
 
@@ -64,6 +109,10 @@ Connection::Connection(char *port)
             _connstate = LISTEN;
             listen(sock, 5);
         }
+
+        u_long iMode=1;
+        ioctlsocket(sock, FIONBIO,&iMode);
+
     }
 
 #else
@@ -76,6 +125,8 @@ Connection::Connection(SOCKET s)
 {
     //For use accepting connections
     sock = s;
+    u_long iMode=1;
+    ioctlsocket(sock, FIONBIO,&iMode);
     _connstate = OPEN;
 }
 
@@ -89,8 +140,8 @@ Connection::~Connection()
             #error "TODO sockets for linux"
         #elif defined _WIN32 || defined _WIN64
             closesocket(sock);
+            sock = NULL;
         #endif
-
         _connstate = CLOSED;
 
     }
@@ -107,14 +158,28 @@ SOCKET Connection::getSocket()
     return sock;
 }
 
+ConnectionState Connection::getState()
+{
+    return _connstate;
+}
+
 Connection* Connection::doAccept()
 {
     SOCKET t;
     t = accept(sock, NULL, NULL);
+
     if(t == INVALID_SOCKET)
     {
-        _connstate = CONNERROR;
-        return NULL;
+        if(WSAGetLastError() == WSAEWOULDBLOCK)
+        {
+            Connection *r = new Connection();
+            return r;
+        }
+        else
+        {
+            _connstate = CONNERROR;
+            return NULL;
+        }
     }
     _connstate = OPEN;
     Connection *r = new Connection(t);

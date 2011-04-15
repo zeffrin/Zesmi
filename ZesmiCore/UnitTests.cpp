@@ -16,8 +16,12 @@ using namespace std;
 int testHighResolutionTimer();
 int testVectorAssignment();
 int testVectorAddAssign();
-int testInitAndDeinit();
+int testInitialize();
 int testConnectionSocketListen();
+int testSelect();
+int testConnectionSocketConnect();
+int testConnectionSocketendListen();
+int testDeinitialize();
 
 typedef int (*fn)();
 
@@ -27,8 +31,12 @@ static fn tests[] = {
     testHighResolutionTimer,
     testVectorAssignment,
     testVectorAddAssign,
-    testInitAndDeinit,
+    testInitialize,
     testConnectionSocketListen,
+    testSelect,
+    testConnectionSocketConnect,
+    testConnectionSocketendListen,
+    testDeinitialize,
     NULL
 
 };
@@ -38,26 +46,31 @@ char *testnames[] = {
     "Test high resolution timer used for unittesting",
     "Test = overload for Vector class",
     "Test += overload for Vector class",
-    "Test Initialisation and Deinitialisation",
-    "Test Opening a listening tcp socket"
+    "Test Initialization",
+    "Test Opening a listening tcp socket",
+    "Test select doesn't error with listen sockets",
+    "Test connecting to a socket",
+    "Test closing a listening socket",
+    "Test Deinitialization"
 };
 
 int main(void)
 {
-    int i;
     stopWatch s;
     double elapsedTime = 0.0f;
     double teT = 0.0f;
+    char c;
 
     if( (sizeof(testnames) / sizeof(char*))  !=  (sizeof(tests) / sizeof(fn)) - 1 )
     {
         printf("Ensure matching entries in tests and testnames in UnitTests.cpp\n");
         printf("Press enter to finish\n");
-        fscanf(stdin, "%d", &i);
+        fscanf(stdin, "%c", &c);
         return 1;
     }
 
-    for(i = 0; tests[i] != NULL; i++) // reuse i
+    int i;
+    for(i = 0; tests[i] != NULL; i++)
     {
         printf("%s\n", testnames[i]);
         startTimer(&s);
@@ -68,20 +81,22 @@ int main(void)
 
         if(!error)
         {
-            printf("    PASSED in %f seconds.\n\n", teT);
+            printf("Passed in %f seconds.\n\n", teT);
         }
         else
         {
-            printf("    FAILED in %f seconds.\n\n", teT);
+            printf("FAILED in %f seconds.\n\n", teT);
             break;
         }
     }
+
+    // TODO Display times in a nicer format
 
     printf ("\n%d of %d tests completed successfully in %f seconds.\n", i, (int)(sizeof(testnames) / sizeof(char*)), elapsedTime);
 
     printf("Press enter to finish\n");
 
-    fscanf(stdin, "%d", &i);  // reuse i
+    fscanf(stdin, "%c", &c);
 }
 
 int testHighResolutionTimer()
@@ -132,11 +147,10 @@ int testVectorAddAssign()
     return 0;
 }
 
-int testInitAndDeinit()
+int testInitialize()
 {
-    Initialize *init = new Initialize();
+    Initialize *init = Initialize::getInstance();
     bool result = init->doInitialization();
-    delete init;
     if(!result)
         return 1;
     else
@@ -145,24 +159,117 @@ int testInitAndDeinit()
 
 int testConnectionSocketListen()
 {
-    Initialize *init = new Initialize();
-    bool result = init->doInitialization();
+    Initialize *init = Initialize::getInstance();
     ConnectionController *conns = ConnectionController::getInstance();
     Connection *PlayerListener;
+    bool result;
 
-    if((PlayerListener = conns->startListen("1022")))
+    if((PlayerListener = conns->doListen("1022")))
         result = true;
     else
         result = false;
 
-    delete conns;
-    delete init;
+    conns->endListen(PlayerListener);
 
     if(!result)
         return 1;
     else
         return 0;
+
 }
+
+int testSelect()
+{
+    Initialize *init = Initialize::getInstance();
+    ConnectionController *conns = ConnectionController::getInstance();
+    Connection *PlayerListener;
+    if(!(PlayerListener = conns->doListen("1022")))
+        return 1;
+
+    /* Blocks when working so...
+    if(!(conns->doSelect()))
+    {
+        return 1;
+    }
+    */
+    conns->endListen(PlayerListener);
+    return 0;
+
+}
+
+int testConnectionSocketConnect()
+{
+    Initialize *init = Initialize::getInstance();
+    ConnectionController *conns = ConnectionController::getInstance();
+    Connection *PlayerListener;
+    Connection *c;
+
+    if(!(PlayerListener = conns->doListen("1022")))
+        return 1;
+
+    if(!(c = conns->doConnect("localhost", 1022)))
+        return 1;
+
+    conns->doSelect(); // must do select before can do anything else
+
+    KeepAlive p;
+    p.PacketID = P_KEEPALIVE;
+
+    while(conns->doAccept() == 0) {
+        //c->SendPacket((Packet*)&p);
+        conns->doSelect(); }
+
+    conns->endListen(PlayerListener);
+
+    return 0;
+
+}
+
+int testConnectionSocketendListen()
+{
+    Initialize *init = Initialize::getInstance();
+    ConnectionController *conns = ConnectionController::getInstance();
+    Connection *PlayerListener;
+    Connection *c;
+
+    if(!(PlayerListener = conns->doListen("1022")))
+        return 1;
+
+    if(!(c = conns->doConnect("localhost", 1022)))
+        return 1;
+
+    conns->doSelect();  // must do select before can do anything else
+
+    if (!(conns->doAccept()))
+        return 1;
+
+    conns->endListen(PlayerListener);
+
+    //if((c = conns->doConnect("localhost", 1022)))
+    //    return 1;
+
+    //KeepAlive p;
+    //p.PacketID = 0x0;
+    //c->SendPacket((Packet *)&p);
+
+    //conns->doSelect(); // must do select before can do anything else
+
+    //if ((conns->doAccept()))
+    //    return 1;
+
+    return 0;
+
+}
+
+int testDeinitialize()
+{
+    ConnectionController *conns = ConnectionController::getInstance();
+    Initialize *init = Initialize::getInstance();
+    delete conns;
+    delete init;
+    return 0;
+}
+
 
 // TODO fix this test to be listen and connect test
 /*

@@ -38,10 +38,22 @@ ConnectionController* ConnectionController::getInstance()
 
 }
 
-Connection* ConnectionController::startListen(char *port)
+Connection* ConnectionController::doConnect(char *hostname, int port)
+{
+    Connection *c = new Connection(hostname, port);
+    if(!c->getSocket())
+    {
+        return NULL;
+    }
+    _connections.push_back(c);
+    FD_SET(c->getSocket(), &_fd_master);
+    return c;
+}
+
+Connection* ConnectionController::doListen(char *port)
 {
     Connection *c = new Connection(port);
-    if(!c)
+    if(c->getState() != LISTEN)
     {
         return NULL;
     }
@@ -50,7 +62,7 @@ Connection* ConnectionController::startListen(char *port)
     return c;
 }
 
-void ConnectionController::stopListen(Connection *conn)
+void ConnectionController::endListen(Connection *conn)
 {
     _listenconns.remove(conn);
     FD_CLR(conn->getSocket(), &_fd_master);
@@ -71,8 +83,11 @@ bool ConnectionController::doSelect()
 
     // TODO fdmax is ignored according to msdn, but it fixed my trouble before I think
     int result = select(NULL, &_fd_readyforrecv, &_fd_readyforsend, &_fd_error, NULL);
-    if(!result || result == SOCKET_ERROR)
+    if(!result || result == SOCKET_ERROR || result == -1)
     {
+#if DEBUG
+        int error = WSAGetLastError();
+#endif
         return false;
     }
     return true;
@@ -94,9 +109,10 @@ void ConnectionController::doError()
     }
 }
 
-void ConnectionController::doAccept()
+int ConnectionController::doAccept()
 {
     list<Connection*>::iterator it;
+    int r = 0;
     for ( it = _listenconns.begin() ; it != _listenconns.end() ; it++ )
     {
         if(FD_ISSET((*it)->getSocket(), &_fd_readyforrecv))
@@ -104,11 +120,20 @@ void ConnectionController::doAccept()
             Connection *t = (*it)->doAccept();
             if(t)
             {
-                _connections.push_back(t);
-                FD_SET(t->getSocket(), &_fd_master);
+                if (t->getState() == ACCEPTING)
+                {
+                    delete t;
+                }
+                else
+                {
+                    _connections.push_back(t);
+                    FD_SET(t->getSocket(), &_fd_master);
+                    r++;
+                }
             }
         }
     }
+    return r;
 }
 
 void ConnectionController::doRecv()
