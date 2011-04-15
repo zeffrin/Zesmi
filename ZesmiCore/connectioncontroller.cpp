@@ -38,6 +38,18 @@ ConnectionController* ConnectionController::getInstance()
 
 }
 
+Connection* ConnectionController::doConnect(char *hostname, char *port)
+{
+    Connection *c = new Connection(hostname, port);
+    if(!c)
+    {
+        return NULL;
+    }
+    _connections.push_back(c);
+    FD_SET(c->getSocket(), &_fd_master);
+    return c;
+}
+
 Connection* ConnectionController::doListen(char *port)
 {
     Connection *c = new Connection(port);

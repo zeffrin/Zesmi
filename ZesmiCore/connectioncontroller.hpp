@@ -19,7 +19,7 @@ class ConnectionController
         static ConnectionController *getInstance();
         Connection* doListen(char *port);
         void endListen(Connection *conn);
-        void doConnect(char *host, char *port);
+        Connection* doConnect(char *host, char *port);
         bool doSelect();
         void doAccept();
         void doSend();
