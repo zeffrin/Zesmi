@@ -41,7 +41,7 @@ ConnectionController* ConnectionController::getInstance()
 Connection* ConnectionController::doConnect(char *hostname, int port)
 {
     Connection *c = new Connection(hostname, port);
-    if(!c)
+    if(!c->getSocket())
     {
         return NULL;
     }
@@ -53,7 +53,7 @@ Connection* ConnectionController::doConnect(char *hostname, int port)
 Connection* ConnectionController::doListen(char *port)
 {
     Connection *c = new Connection(port);
-    if(!c)
+    if(c->getState() != LISTEN)
     {
         return NULL;
     }
