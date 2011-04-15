@@ -1,8 +1,19 @@
 
 #include "initialize.hpp"
 
+Initialize* Initialize::_instance = NULL;
+
 Initialize::Initialize()
 {
+}
+
+Initialize* Initialize::getInstance()
+{
+
+    if(_instance)
+        return _instance;
+
+    return ((_instance = new Initialize()));
 }
 
 bool Initialize::doInitialization()

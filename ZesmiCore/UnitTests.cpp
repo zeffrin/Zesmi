@@ -16,10 +16,11 @@ using namespace std;
 int testHighResolutionTimer();
 int testVectorAssignment();
 int testVectorAddAssign();
-int testInitAndDeinit();
+int testInitialize();
 int testConnectionSocketListen();
 int testConnectionSocketConnect();
 int testConnectionSocketendListen();
+int testDeinitialize();
 
 typedef int (*fn)();
 
@@ -29,10 +30,11 @@ static fn tests[] = {
     testHighResolutionTimer,
     testVectorAssignment,
     testVectorAddAssign,
-    testInitAndDeinit,
+    testInitialize,
     testConnectionSocketListen,
     testConnectionSocketConnect,
     testConnectionSocketendListen,
+    testDeinitialize,
     NULL
 
 };
@@ -42,10 +44,11 @@ char *testnames[] = {
     "Test high resolution timer used for unittesting",
     "Test = overload for Vector class",
     "Test += overload for Vector class",
-    "Test Initialisation and Deinitialisation",
+    "Test Initialization",
     "Test Opening a listening tcp socket",
     "Test connecting to a socket",
-    "Test closing a listening socket"
+    "Test closing a listening socket",
+    "Test Deinitialization"
 };
 
 int main(void)
@@ -138,11 +141,10 @@ int testVectorAddAssign()
     return 0;
 }
 
-int testInitAndDeinit()
+int testInitialize()
 {
-    Initialize *init = new Initialize();
+    Initialize *init = Initialize::getInstance();
     bool result = init->doInitialization();
-    delete init;
     if(!result)
         return 1;
     else
@@ -151,18 +153,15 @@ int testInitAndDeinit()
 
 int testConnectionSocketListen()
 {
-    Initialize *init = new Initialize();
-    bool result = init->doInitialization();
+    Initialize *init = Initialize::getInstance();
     ConnectionController *conns = ConnectionController::getInstance();
     Connection *PlayerListener;
+    bool result;
 
     if((PlayerListener = conns->doListen("1022")))
         result = true;
     else
         result = false;
-
-    delete conns;
-    delete init;
 
     if(!result)
         return 1;
@@ -172,14 +171,10 @@ int testConnectionSocketListen()
 
 int testConnectionSocketConnect()
 {
-    Initialize *init = new Initialize();
-    bool result = init->doInitialization();
+    Initialize *init = Initialize::getInstance();
     ConnectionController *conns = ConnectionController::getInstance();
     Connection *PlayerListener;
     Connection *c;
-
-    if(!result)
-        return 1;
 
     if(!(PlayerListener = conns->doListen("1022")))
         return 1;
@@ -190,23 +185,16 @@ int testConnectionSocketConnect()
     if ((conns->doAccept()) == 0)
         return 1;
 
-    delete conns;
-    delete init;
-
     return 0;
 
 }
 
 int testConnectionSocketendListen()
 {
-    Initialize *init = new Initialize();
-    bool result = init->doInitialization();
+    Initialize *init = Initialize::getInstance();
     ConnectionController *conns = ConnectionController::getInstance();
     Connection *PlayerListener;
     Connection *c;
-
-    if(!result)
-        return 1;
 
     if(!(PlayerListener = conns->doListen("1022")))
         return 1;
@@ -225,13 +213,18 @@ int testConnectionSocketendListen()
     if ((conns->doAccept()))
         return 1;
 
-    delete conns;
-    delete init;
-
     return 0;
 
 }
 
+int testDeinitialize()
+{
+    ConnectionController *conns = ConnectionController::getInstance();
+    Initialize *init = Initialize::getInstance();
+    delete conns;
+    delete init;
+    return 0;
+}
 
 
 // TODO fix this test to be listen and connect test

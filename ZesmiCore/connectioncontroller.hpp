@@ -32,6 +32,7 @@ class ConnectionController
     protected:
         ConnectionController();
 
+
         static ConnectionController *_instance;
 
         list<Connection*> _connections;
