@@ -20,6 +20,7 @@ int testInitialize();
 int testConnectionSocketListen();
 int testConnectionSocketConnect();
 int testConnectionSocketendListen();
+int testSelectBlocks();
 int testDeinitialize();
 
 typedef int (*fn)();
@@ -34,6 +35,7 @@ static fn tests[] = {
     testConnectionSocketListen,
     testConnectionSocketConnect,
     testConnectionSocketendListen,
+    testSelect,
     testDeinitialize,
     NULL
 
@@ -48,6 +50,7 @@ char *testnames[] = {
     "Test Opening a listening tcp socket",
     "Test connecting to a socket",
     "Test closing a listening socket",
+    "Test select doesn't error with listen sockets",
     "Test Deinitialization"
 };
 
@@ -229,6 +232,24 @@ int testConnectionSocketendListen()
     //if ((conns->doAccept()))
     //    return 1;
 
+    return 0;
+
+}
+
+int testSelect()
+{
+    Initialize *init = Initialize::getInstance();
+    ConnectionController *conns = ConnectionController::getInstance();
+    Connection *PlayerListener;
+    Connection *c;
+
+    if(!(PlayerListener = conns->doListen("1022")))
+        return 1;
+
+    if(!(conns->doSelect()))
+    {
+        return 1;
+    }
     return 0;
 
 }
