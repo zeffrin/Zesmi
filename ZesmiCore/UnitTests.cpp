@@ -3,6 +3,8 @@
 #include "connectioncontroller.hpp"
 #include "vector.hpp"
 
+#include "hrtime.h"
+
 
 #include <stdio.h>
 #include <string.h>
@@ -39,21 +41,27 @@ char *testnames[] = {
 
 int main(void)
 {
+
+    stopWatch s;
+
     for(int i = 0; tests[i] != NULL; i++)
     {
-        printf("%s%*s:   ", testnames[i], 69 - strlen(testnames[i]), "");
-        if(tests[i]() == 0)
+        printf("%s%*s:   ", testnames[i], 60 - strlen(testnames[i]), "");
+        startTimer(&s);
+        int error = tests[i]();
+        stopTimer(&s);
+        if(!error)
         {
-            printf("PASSED\n");
+            printf("PASSED %lf\n", getElapsedTime(&s));
         }
         else
         {
-            printf("FAILED\n");
+            printf("FAILED %lf\n", getElapsedTime(&s));
             break;
         }
     }
     int t;
-    fscanf(stdin, "%c", &t);
+    fscanf(stdin, "%d", &t);
 }
 
 int testVectorAssignment()

@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
-	<ActiveTarget name="Debug" />
-	<File name="UnitTests.cpp" open="1" top="1" tabpos="2">
-		<Cursor position="659" topLine="15" />
+	<ActiveTarget name="Test" />
+	<File name="UnitTests.cpp" open="1" top="1" tabpos="1">
+		<Cursor position="1397" topLine="44" />
 	</File>
-	<File name="block.cpp" open="1" top="0" tabpos="6">
+	<File name="block.cpp" open="0" top="0" tabpos="6">
 		<Cursor position="95" topLine="0" />
 	</File>
 	<File name="block.hpp" open="0" top="0" tabpos="7">
 		<Cursor position="202" topLine="0" />
 	</File>
-	<File name="configuration.hpp" open="1" top="0" tabpos="7">
+	<File name="configuration.hpp" open="0" top="0" tabpos="7">
 		<Cursor position="74" topLine="0" />
 	</File>
-	<File name="connection.cpp" open="1" top="0" tabpos="4">
-		<Cursor position="7826" topLine="228" />
+	<File name="connection.cpp" open="0" top="0" tabpos="4">
+		<Cursor position="2390" topLine="100" />
 	</File>
-	<File name="connection.hpp" open="1" top="0" tabpos="3">
+	<File name="connection.hpp" open="0" top="0" tabpos="3">
 		<Cursor position="1222" topLine="45" />
 	</File>
-	<File name="connectioncontroller.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="475" topLine="33" />
+	<File name="connectioncontroller.cpp" open="1" top="0" tabpos="3">
+		<Cursor position="1140" topLine="33" />
 	</File>
-	<File name="connectioncontroller.hpp" open="1" top="0" tabpos="5">
-		<Cursor position="554" topLine="9" />
+	<File name="connectioncontroller.hpp" open="1" top="0" tabpos="2">
+		<Cursor position="588" topLine="4" />
 	</File>
-	<File name="entity.cpp" open="1" top="0" tabpos="8">
+	<File name="entity.cpp" open="0" top="0" tabpos="8">
 		<Cursor position="286" topLine="8" />
 	</File>
-	<File name="living.hpp" open="1" top="0" tabpos="9">
+	<File name="living.hpp" open="0" top="0" tabpos="9">
 		<Cursor position="83" topLine="0" />
 	</File>
 </CodeBlocks_layout_file>
