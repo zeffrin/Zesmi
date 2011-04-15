@@ -3,6 +3,15 @@
 #include <stdio.h>
 #include "connection.hpp"
 
+Connection::Connection()
+{
+    // For handling an in progress connection
+
+    sock = NULL;
+    _connstate = ACCEPTING;
+
+}
+
 Connection::Connection(char *hostname, int port)
 {
 
@@ -136,14 +145,28 @@ SOCKET Connection::getSocket()
     return sock;
 }
 
+ConnectionState Connection::getState()
+{
+    return _connstate;
+}
+
 Connection* Connection::doAccept()
 {
     SOCKET t;
     t = accept(sock, NULL, NULL);
+
     if(t == INVALID_SOCKET)
     {
-        _connstate = CONNERROR;
-        return NULL;
+        if(WSAGetLastError() == WSAEWOULDBLOCK)
+        {
+            Connection *r = new Connection();
+            return r;
+        }
+        else
+        {
+            _connstate = CONNERROR;
+            return NULL;
+        }
     }
     _connstate = OPEN;
     Connection *r = new Connection(t);

@@ -83,8 +83,9 @@ bool ConnectionController::doSelect()
 
     // TODO fdmax is ignored according to msdn, but it fixed my trouble before I think
     int result = select(NULL, &_fd_readyforrecv, &_fd_readyforsend, &_fd_error, NULL);
-    if(!result || result == SOCKET_ERROR)
+    if(!result || result == SOCKET_ERROR || result == -1)
     {
+        int error = WSAGetLastError();
         return false;
     }
     return true;
@@ -117,9 +118,16 @@ int ConnectionController::doAccept()
             Connection *t = (*it)->doAccept();
             if(t)
             {
-                _connections.push_back(t);
-                FD_SET(t->getSocket(), &_fd_master);
-                r++;
+                if (t->getState() == ACCEPTING)
+                {
+                    delete t;
+                }
+                else
+                {
+                    _connections.push_back(t);
+                    FD_SET(t->getSocket(), &_fd_master);
+                    r++;
+                }
             }
         }
     }
