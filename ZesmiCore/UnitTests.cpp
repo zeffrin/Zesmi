@@ -3,6 +3,8 @@
 #include "connectioncontroller.hpp"
 #include "vector.hpp"
 
+#include "hrtime.h"
+
 
 #include <stdio.h>
 #include <string.h>
@@ -11,6 +13,7 @@
 
 using namespace std;
 
+int testHighResolutionTimer();
 int testVectorAssignment();
 int testVectorAddAssign();
 int testInitAndDeinit();
@@ -23,6 +26,7 @@ typedef int (*fn)();
 static fn tests[] = {
     // List tests here, if tests depend on some other functionality put them afterward
     //testListenandAccept,
+    testHighResolutionTimer,
     testVectorAssignment,
     testVectorAddAssign,
     testInitAndDeinit,
@@ -35,6 +39,7 @@ static fn tests[] = {
 
 char *testnames[] = {
     // And here as strings
+    "Test high resolution timer used for unittesting",
     "Test = overload for Vector class",
     "Test += overload for Vector class",
     "Test Initialisation and Deinitialisation",
@@ -45,21 +50,51 @@ char *testnames[] = {
 
 int main(void)
 {
-    for(int i = 0; tests[i] != NULL; i++)
+    int i;
+    stopWatch s;
+    double elapsedTime = 0.0f;
+    double teT = 0.0f;
+
+    if( (sizeof(testnames) / sizeof(char*))  !=  (sizeof(tests) / sizeof(fn)) - 1 )
     {
-        printf("%s%*s:   ", testnames[i], 69 - strlen(testnames[i]), "");
-        if(tests[i]() == 0)
+        printf("Ensure matching entries in tests and testnames in UnitTests.cpp\n");
+        printf("Press enter to finish\n");
+        fscanf(stdin, "%d", &i);
+        return 1;
+    }
+
+    for(i = 0; tests[i] != NULL; i++) // reuse i
+    {
+        printf("%s\n", testnames[i]);
+        startTimer(&s);
+        int error = tests[i]();
+        stopTimer(&s);
+        teT = getElapsedTime(&s);
+        elapsedTime += teT;
+
+        if(!error)
         {
-            printf("PASSED\n");
+            printf("    PASSED in %f seconds.\n\n", teT);
         }
         else
         {
-            printf("FAILED\n");
+            printf("    FAILED in %f seconds.\n\n", teT);
             break;
         }
     }
-    int t;
-    fscanf(stdin, "%c", &t);
+
+    printf ("\n%d of %d tests completed successfully in %f seconds.\n", i, (int)(sizeof(testnames) / sizeof(char*)), elapsedTime);
+
+    printf("Press enter to finish\n");
+
+    fscanf(stdin, "%d", &i);  // reuse i
+}
+
+int testHighResolutionTimer()
+{
+    float a;
+    for(long int i = 0; i < 9999999; i++) a = 5 / 7;
+    return 0;
 }
 
 int testVectorAssignment()
