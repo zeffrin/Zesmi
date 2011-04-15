@@ -45,7 +45,7 @@ class Connection
     public:
         Connection(char *port);  //for tcp listening
         //Connection(char *pipename); // connect named pipe
-        Connection(char *hostname, char *port); // connect tcp
+        Connection(char *hostname, int port); // connect tcp
         Connection(SOCKET s); // for accepting connections
         ~Connection();
 

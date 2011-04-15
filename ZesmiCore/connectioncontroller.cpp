@@ -38,7 +38,7 @@ ConnectionController* ConnectionController::getInstance()
 
 }
 
-Connection* ConnectionController::doConnect(char *hostname, char *port)
+Connection* ConnectionController::doConnect(char *hostname, int port)
 {
     Connection *c = new Connection(hostname, port);
     if(!c)

@@ -3,8 +3,29 @@
 #include <stdio.h>
 #include "connection.hpp"
 
-Connection::Connection(char *hostname, char *port)
+Connection::Connection(char *hostname, int port)
 {
+
+    sock = INVALID_SOCKET;
+    sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (sock == INVALID_SOCKET)
+    {
+        sock = NULL;
+        _connstate = CONNERROR;
+        return;
+    }
+
+     sockaddr_in clientService;
+     clientService.sin_family = AF_INET;
+     clientService.sin_addr.s_addr = inet_addr( hostname );
+     clientService.sin_port = htons( port );
+
+     if ( connect(sock, (SOCKADDR*) &clientService, sizeof(clientService) ) == SOCKET_ERROR)
+     {
+        sock = NULL;
+        _connstate = CONNERROR;
+        return;
+     }
 
     _connstate = OPEN;
 
@@ -38,13 +59,11 @@ Connection::Connection(char *port)
     }
     else
     {
-
         sock = INVALID_SOCKET;
         sock = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
-
         if(sock == INVALID_SOCKET)
         {
-            freeaddrinfo(result);
+            sock = NULL;
             _connstate = CONNERROR;
         }
 
@@ -52,6 +71,7 @@ Connection::Connection(char *port)
         if(iresult == SOCKET_ERROR)
         {
             closesocket(sock);
+            sock = NULL;
             _connstate = CONNERROR;
         }
 
@@ -89,8 +109,8 @@ Connection::~Connection()
             #error "TODO sockets for linux"
         #elif defined _WIN32 || defined _WIN64
             closesocket(sock);
+            sock = NULL;
         #endif
-
         _connstate = CLOSED;
 
     }
