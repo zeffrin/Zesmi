@@ -18,9 +18,9 @@ int testVectorAssignment();
 int testVectorAddAssign();
 int testInitialize();
 int testConnectionSocketListen();
+int testSelect();
 int testConnectionSocketConnect();
 int testConnectionSocketendListen();
-int testSelectBlocks();
 int testDeinitialize();
 
 typedef int (*fn)();
@@ -33,9 +33,9 @@ static fn tests[] = {
     testVectorAddAssign,
     testInitialize,
     testConnectionSocketListen,
+    testSelect,
     testConnectionSocketConnect,
     testConnectionSocketendListen,
-    testSelect,
     testDeinitialize,
     NULL
 
@@ -48,9 +48,9 @@ char *testnames[] = {
     "Test += overload for Vector class",
     "Test Initialization",
     "Test Opening a listening tcp socket",
+    "Test select doesn't error with listen sockets",
     "Test connecting to a socket",
     "Test closing a listening socket",
-    "Test select doesn't error with listen sockets",
     "Test Deinitialization"
 };
 
