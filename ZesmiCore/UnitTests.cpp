@@ -44,13 +44,20 @@ char *testnames[] = {
 
 int main(void)
 {
-
+    int i;
     stopWatch s;
     double elapsedTime = 0.0f;
     double teT = 0.0f;
 
-    int i;
-    for(i = 0; tests[i] != NULL; i++)
+    if( (sizeof(testnames) / sizeof(char*))  !=  (sizeof(tests) / sizeof(fn)) - 1 )
+    {
+        printf("Ensure matching entries in tests and testnames in UnitTests.cpp\n");
+        printf("Press enter to finish\n");
+        fscanf(stdin, "%d", &i);
+        return 1;
+    }
+
+    for(i = 0; tests[i] != NULL; i++) // reuse i
     {
         printf("%s\n", testnames[i]);
         startTimer(&s);
@@ -70,11 +77,11 @@ int main(void)
         }
     }
 
-    printf ("\n%d of %d tests completed successfully in %lf ticks\n", i, (int)(sizeof(testnames) / sizeof(char*)), elapsedTime);
+    printf ("\n%d of %d tests completed successfully in %f ticks\n", i, (int)(sizeof(testnames) / sizeof(char*)), elapsedTime);
 
     printf("Press enter to finish\n");
-    int t;
-    fscanf(stdin, "%d", &t);
+
+    fscanf(stdin, "%d", &i);  // reuse i
 }
 
 int testHighResolutionTimer()
