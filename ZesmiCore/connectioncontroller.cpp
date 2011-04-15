@@ -106,9 +106,10 @@ void ConnectionController::doError()
     }
 }
 
-void ConnectionController::doAccept()
+int ConnectionController::doAccept()
 {
     list<Connection*>::iterator it;
+    int r = 0;
     for ( it = _listenconns.begin() ; it != _listenconns.end() ; it++ )
     {
         if(FD_ISSET((*it)->getSocket(), &_fd_readyforrecv))
@@ -118,9 +119,11 @@ void ConnectionController::doAccept()
             {
                 _connections.push_back(t);
                 FD_SET(t->getSocket(), &_fd_master);
+                r++;
             }
         }
     }
+    return r;
 }
 
 void ConnectionController::doRecv()

@@ -21,7 +21,7 @@ class ConnectionController
         void endListen(Connection *conn);
         Connection* doConnect(char *host, int port);
         bool doSelect();
-        void doAccept();
+        int doAccept();
         void doSend();
         void doRecv();
         void doError();

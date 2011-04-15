@@ -187,7 +187,7 @@ int testConnectionSocketConnect()
     if(!(c = conns->doConnect("localhost", 1022)))
         return 1;
 
-    if (!(conns->doAccept()))
+    if ((conns->doAccept()) == 0)
         return 1;
 
     delete conns;
@@ -211,16 +211,15 @@ int testConnectionSocketendListen()
     if(!(PlayerListener = conns->doListen("1022")))
         return 1;
 
-    if(!(c = conns->doConnect("localhost", "1022")))
+    if(!(c = conns->doConnect("localhost", 1022)))
         return 1;
 
     if (!(conns->doAccept()))
         return 1;
 
-    if (!conns->endListen(PlayerListener))
-        return 1;
+    conns->endListen(PlayerListener);
 
-    if(!(c = conns->doConnect("localhost", "1022")))
+    if((c = conns->doConnect("localhost", 1022)))
         return 1;
 
     if ((conns->doAccept()))
