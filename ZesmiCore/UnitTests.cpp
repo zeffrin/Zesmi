@@ -175,6 +175,25 @@ int testConnectionSocketListen()
 
 }
 
+int testSelect()
+{
+    Initialize *init = Initialize::getInstance();
+    ConnectionController *conns = ConnectionController::getInstance();
+    Connection *PlayerListener;
+    if(!(PlayerListener = conns->doListen("1022")))
+        return 1;
+
+    /* Blocks when working so...
+    if(!(conns->doSelect()))
+    {
+        return 1;
+    }
+    */
+    conns->endListen(PlayerListener);
+    return 0;
+
+}
+
 int testConnectionSocketConnect()
 {
     Initialize *init = Initialize::getInstance();
@@ -190,10 +209,14 @@ int testConnectionSocketConnect()
 
     conns->doSelect(); // must do select before can do anything else
 
-    if(conns->doAccept() == 0)
-    {
-        return 1;
-    }
+    KeepAlive p;
+    p.PacketID = P_KEEPALIVE;
+
+    while(conns->doAccept() == 0) {
+        //c->SendPacket((Packet*)&p);
+        conns->doSelect(); }
+
+    conns->endListen(PlayerListener);
 
     return 0;
 
@@ -230,27 +253,6 @@ int testConnectionSocketendListen()
 
     //if ((conns->doAccept()))
     //    return 1;
-
-    return 0;
-
-}
-
-int testSelect()
-{
-    Initialize *init = Initialize::getInstance();
-    ConnectionController *conns = ConnectionController::getInstance();
-    Connection *PlayerListener;
-    Connection *c;
-
-    if(!(PlayerListener = conns->doListen("1022")))
-        return 1;
-
-    /*  Blocks when working so...
-    if(!(conns->doSelect()))
-    {
-        return 1;
-    }
-    */
 
     return 0;
 
