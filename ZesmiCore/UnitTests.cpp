@@ -184,7 +184,7 @@ int testConnectionSocketConnect()
     if(!(PlayerListener = conns->doListen("1022")))
         return 1;
 
-    if(!(c = conns->doConnect("localhost", "1022")))
+    if(!(c = conns->doConnect("localhost", 1022)))
         return 1;
 
     if (!(conns->doAccept()))
