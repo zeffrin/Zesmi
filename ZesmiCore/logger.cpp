@@ -8,14 +8,6 @@ Logger::Logger()
 {
     _conn = NULL;
     _logfile = fopen(LOGFILE, "w");
-    if(_logfile)
-    {
-        writeToLog("Logging to file: " LOGFILE);
-    }
-    else
-    {
-        writeToLog("LOGGER: ERROR unable to open " LOGFILE " for writing.\n");
-    }
 }
 
 Logger::~Logger()

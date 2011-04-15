@@ -39,10 +39,12 @@
 			</Target>
 			<Target title="Test">
 				<Option output="ZesmiCoreTests" prefix_auto="1" extension_auto="1" />
-				<Option external_deps="C:\Users\Zeffrin\Documents\Projects\ZesmiCore\;" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Option use_console_runner="0" />
+				<Option projectCompilerOptionsRelation="1" />
+				<Option projectLinkerOptionsRelation="1" />
+				<Option projectLibDirsRelation="1" />
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-ansi" />
@@ -92,6 +94,21 @@
 			<Option target="Release" />
 			<Option target="Debug" />
 		</Unit>
+		<Unit filename="entity.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="entity.hpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="hrtime.c">
+			<Option compilerVar="CC" />
+			<Option target="Test" />
+		</Unit>
+		<Unit filename="hrtime.h">
+			<Option target="Test" />
+		</Unit>
 		<Unit filename="initialize.cpp">
 			<Option target="Release" />
 			<Option target="Debug" />
@@ -132,11 +149,15 @@
 			<Option target="Release" />
 			<Option target="Debug" />
 		</Unit>
+		<Unit filename="vector.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="vector.hpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
 			<debugger />
-			<lib_finder disable_auto="1" />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
