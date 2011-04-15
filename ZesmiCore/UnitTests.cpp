@@ -13,6 +13,7 @@
 
 using namespace std;
 
+int testHighResolutionTimer();
 int testVectorAssignment();
 int testVectorAddAssign();
 int testInitAndDeinit();
@@ -23,6 +24,7 @@ typedef int (*fn)();
 static fn tests[] = {
     // List tests here, if tests depend on some other functionality put them afterward
     //testListenandAccept,
+    testHighResolutionTimer,
     testVectorAssignment,
     testVectorAddAssign,
     testInitAndDeinit,
@@ -33,6 +35,7 @@ static fn tests[] = {
 
 char *testnames[] = {
     // And here as strings
+    "Test high resolution timer used for unittesting",
     "Test = overload for Vector class",
     "Test += overload for Vector class",
     "Test Initialisation and Deinitialisation",
@@ -43,25 +46,42 @@ int main(void)
 {
 
     stopWatch s;
+    double elapsedTime = 0.0f;
+    double teT = 0.0f;
 
-    for(int i = 0; tests[i] != NULL; i++)
+    int i;
+    for(i = 0; tests[i] != NULL; i++)
     {
-        printf("%s%*s:   ", testnames[i], 60 - strlen(testnames[i]), "");
+        printf("%s\n", testnames[i]);
         startTimer(&s);
         int error = tests[i]();
         stopTimer(&s);
+        teT = getElapsedTime(&s);
+        elapsedTime += teT;
+
         if(!error)
         {
-            printf("PASSED %lf\n", getElapsedTime(&s));
+            printf("    PASSED in %lf seconds.\n\n", teT);
         }
         else
         {
-            printf("FAILED %lf\n", getElapsedTime(&s));
+            printf("    FAILED in %lf seconds.\n\n", teT);
             break;
         }
     }
+
+    printf ("\n%d of %d tests completed successfully in %lf ticks\n", i, (int)(sizeof(testnames) / sizeof(char*)), elapsedTime);
+
+    printf("Press enter to finish\n");
     int t;
     fscanf(stdin, "%d", &t);
+}
+
+int testHighResolutionTimer()
+{
+    float a;
+    for(long int i = 0; i < 9999999; i++) a = 5 / 7;
+    return 0;
 }
 
 int testVectorAssignment()
