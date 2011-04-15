@@ -24,13 +24,26 @@ Connection::Connection(char *hostname, int port)
         return;
     }
 
-    sockaddr_in clientService;
-    clientService.sin_family = AF_INET;
-    clientService.sin_addr.s_addr = inet_addr( hostname );
-    clientService.sin_port = htons( port );
-
-    if ( connect(sock, (SOCKADDR*) &clientService, sizeof(clientService) ) == SOCKET_ERROR)
+    SOCKADDR_IN addr;
+    addr.sin_family     = AF_INET;
+    addr.sin_port       = htons(port);
+    if ((addr.sin_addr.s_addr = inet_addr(hostname)) == -1)
     {
+        struct hostent *hs;
+        if ((hs = gethostbyname(hostname)) == NULL)
+        {
+            sock = NULL;
+            _connstate = CONNERROR;
+            return;
+        }
+        addr.sin_family = hs->h_addrtype;
+        memcpy((void *)&addr.sin_addr.s_addr, hs->h_addr, hs->h_length);
+    }
+    if (connect(sock, (LPSOCKADDR)&addr, sizeof(addr)) == SOCKET_ERROR)
+    {
+
+        int error = WSAGetLastError();
+
         sock = NULL;
         _connstate = CONNERROR;
         return;

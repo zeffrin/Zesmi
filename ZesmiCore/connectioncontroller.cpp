@@ -85,7 +85,9 @@ bool ConnectionController::doSelect()
     int result = select(NULL, &_fd_readyforrecv, &_fd_readyforsend, &_fd_error, NULL);
     if(!result || result == SOCKET_ERROR || result == -1)
     {
+#if DEBUG
         int error = WSAGetLastError();
+#endif
         return false;
     }
     return true;
