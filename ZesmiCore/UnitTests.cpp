@@ -68,16 +68,16 @@ int main(void)
 
         if(!error)
         {
-            printf("    PASSED in %lf seconds.\n\n", teT);
+            printf("    PASSED in %f seconds.\n\n", teT);
         }
         else
         {
-            printf("    FAILED in %lf seconds.\n\n", teT);
+            printf("    FAILED in %f seconds.\n\n", teT);
             break;
         }
     }
 
-    printf ("\n%d of %d tests completed successfully in %f ticks\n", i, (int)(sizeof(testnames) / sizeof(char*)), elapsedTime);
+    printf ("\n%d of %d tests completed successfully in %f seconds.\n", i, (int)(sizeof(testnames) / sizeof(char*)), elapsedTime);
 
     printf("Press enter to finish\n");
 
