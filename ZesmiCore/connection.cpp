@@ -84,6 +84,10 @@ Connection::Connection(char *port)
             _connstate = LISTEN;
             listen(sock, 5);
         }
+
+        u_long iMode=1;
+        ioctlsocket(sock, FIONBIO,&iMode);
+
     }
 
 #else

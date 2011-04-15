@@ -182,9 +182,17 @@ int testConnectionSocketConnect()
     if(!(c = conns->doConnect("localhost", 1022)))
         return 1;
 
-    if ((conns->doAccept()) == 0)
-        return 1;
+    conns->doSelect(); // must do select before can do anything else
 
+    KeepAlive p;
+    p.PacketID = P_KEEPALIVE;
+
+    c->SendPacket((Packet *)&p);
+
+    while(conns->doAccept() == 0)
+    {
+        conns->doSelect();
+    }
     return 0;
 
 }
@@ -202,16 +210,24 @@ int testConnectionSocketendListen()
     if(!(c = conns->doConnect("localhost", 1022)))
         return 1;
 
+    conns->doSelect();  // must do select before can do anything else
+
     if (!(conns->doAccept()))
         return 1;
 
     conns->endListen(PlayerListener);
 
-    if((c = conns->doConnect("localhost", 1022)))
-        return 1;
+    //if((c = conns->doConnect("localhost", 1022)))
+    //    return 1;
 
-    if ((conns->doAccept()))
-        return 1;
+    //KeepAlive p;
+    //p.PacketID = 0x0;
+    //c->SendPacket((Packet *)&p);
+
+    //conns->doSelect(); // must do select before can do anything else
+
+    //if ((conns->doAccept()))
+    //    return 1;
 
     return 0;
 
