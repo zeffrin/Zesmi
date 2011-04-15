@@ -15,17 +15,20 @@ Connection::Connection(char *hostname, int port)
         return;
     }
 
-     sockaddr_in clientService;
-     clientService.sin_family = AF_INET;
-     clientService.sin_addr.s_addr = inet_addr( hostname );
-     clientService.sin_port = htons( port );
+    sockaddr_in clientService;
+    clientService.sin_family = AF_INET;
+    clientService.sin_addr.s_addr = inet_addr( hostname );
+    clientService.sin_port = htons( port );
 
-     if ( connect(sock, (SOCKADDR*) &clientService, sizeof(clientService) ) == SOCKET_ERROR)
-     {
+    if ( connect(sock, (SOCKADDR*) &clientService, sizeof(clientService) ) == SOCKET_ERROR)
+    {
         sock = NULL;
         _connstate = CONNERROR;
         return;
-     }
+    }
+
+    u_long iMode=1;
+    ioctlsocket(sock, FIONBIO,&iMode);
 
     _connstate = OPEN;
 
@@ -100,6 +103,8 @@ Connection::Connection(SOCKET s)
 {
     //For use accepting connections
     sock = s;
+    u_long iMode=1;
+    ioctlsocket(sock, FIONBIO,&iMode);
     _connstate = OPEN;
 }
 
