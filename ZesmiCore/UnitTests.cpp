@@ -31,7 +31,6 @@ typedef int (*fn)();
 
 static fn tests[] = {
     // List tests here, if tests depend on some other functionality put them afterward
-    //testListenandAccept,
     testHighResolutionTimer,
     testVectorAssignment,
     testVectorAddAssign,
@@ -100,12 +99,8 @@ int main(void)
         }
     }
 
-    // TODO Display times in a nicer format
-
     printf ("\n%d of %d tests completed successfully in %f seconds.\n", i, (int)(sizeof(testnames) / sizeof(char*)), elapsedTime);
-
     printf("Press enter to finish\n");
-
     fscanf(stdin, "%c", &c);
 }
 
@@ -186,7 +181,6 @@ bool testHandler(Packet *p, Connection *sender)
 
 int testConnectionSocketListen()
 {
-    Initialize *init = Initialize::getInstance();
     ConnectionController *conns = ConnectionController::getInstance();
     Connection *PlayerListener;
     PacketHandler handler = testHandler;
@@ -208,7 +202,6 @@ int testConnectionSocketListen()
 
 int testSelect()
 {
-    Initialize *init = Initialize::getInstance();
     ConnectionController *conns = ConnectionController::getInstance();
     Connection *PlayerListener;
     PacketHandler handler = testHandler;
@@ -241,9 +234,7 @@ int testConnectionSocketConnect()
         return 1;
 
     conns->doSelect(); // must do select before can do anything else
-    while(conns->doAccept() == 0) {
-        //c->SendPacket((Packet*)&p);
-        conns->doSelect(); }
+    while(conns->doAccept() == 0) conns->doSelect();
 
     conns->endListen(PlayerListener);
     conns->doDisconnect(c);
@@ -283,7 +274,6 @@ int testConnectionSocketendListen()
 int testSendAndReceive()
 {
     ConnectionController *conns = ConnectionController::getInstance();
-    Initialize *init = Initialize::getInstance();
     PacketHandler handler = testHandler;
     Connection *PlayerListener;
     Connection *c;
@@ -303,7 +293,7 @@ int testSendAndReceive()
 
     c->SendPacket((Packet*)&p);
     conns->doSelect();
-    while(conns->doRecv() < 1) { conns->doSelect();}
+    while(conns->doRecv() < 1) conns->doSelect();
 
 
     HandShake h;
@@ -312,7 +302,7 @@ int testSendAndReceive()
 
     c->SendPacket((Packet*)&h);
     conns->doSelect();
-    while(conns->doRecv() < 1) { conns->doSelect();}
+    while(conns->doRecv() < 1) conns->doSelect();
 
     conns->endListen(PlayerListener);
     conns->doDisconnect(c);
@@ -323,7 +313,6 @@ int testSendAndReceive()
 int testRoutePackets()
 {
     ConnectionController *conns = ConnectionController::getInstance();
-    Initialize *init = Initialize::getInstance();
     PacketHandler handler = testHandler;
     Connection *PlayerListener;
     Connection *c;
@@ -343,7 +332,7 @@ int testRoutePackets()
 
     c->SendPacket((Packet*)&p);
     conns->doSelect();
-    while(conns->doRecv() < 1) { conns->doSelect();}
+    while(conns->doRecv() < 1) conns->doSelect();
 
 
     HandShake h;
@@ -352,12 +341,10 @@ int testRoutePackets()
 
     c->SendPacket((Packet*)&h);
     conns->doSelect();
-    while(conns->doRecv() < 1) { conns->doSelect();}
+    while(conns->doRecv() < 1) conns->doSelect();
 
     if(conns->doRouting() != 2)
-    {
         return 1;
-    }
 
     conns->endListen(PlayerListener);
     conns->doDisconnect(c);
@@ -367,7 +354,6 @@ int testRoutePackets()
 
 bool testRespondHandler(Packet *p, Connection *sender)
 {
-    ConnectionController *conns = ConnectionController::getInstance();
     if(!p)
         return false;
     if(p->PacketID < 0)
@@ -394,7 +380,6 @@ bool testRespondHandler(Packet *p, Connection *sender)
 int testRespondFromHandler()
 {
     ConnectionController *conns = ConnectionController::getInstance();
-    Initialize *init = Initialize::getInstance();
     PacketHandler handler = testRespondHandler;
     Connection *PlayerListener;
     Connection *c;
@@ -443,55 +428,3 @@ int testDeinitialize()
     return 0;
 }
 
-// TODO fix this test to be listen and connect test
-/*
-
-int testListenandAccept() {
-    printf("testListenandAccept: ");
-
-    Initialize *init = new Initialize();
-    bool result = init->doInitialization();
-    Logger *log = Logger::getInstance();
-    Connection *PlayerListener;
-
-    if(!result)
-    {
-        // TODO send to logger
-        return 1;
-    }
-
-    ConnectionController *conns = ConnectionController::getInstance();
-    if((PlayerListener = conns->startListen("1022")))
-    {
-        log->writeToLog("Listening on PORT 1022");
-    }
-
-    else
-    {
-        log->writeToLog("Error creating listening port");
-        return 1;
-    }
-
-    while(1)
-    {
-        conns->doSelect();
-        conns->doRecv();
-        conns->doError();
-        conns->doAccept();
-
-        //conns->doRouting();
-        //conns->doSend();
-    }
-
-    conns->stopListen(PlayerListener);
-    delete PlayerListener;
-
-
-    delete log;
-    delete conns;
-    delete init;
-
-    return 0;
-
-}
-*/
