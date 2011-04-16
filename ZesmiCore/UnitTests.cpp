@@ -236,6 +236,7 @@ int testConnectionSocketConnect()
         conns->doSelect(); }
 
     conns->endListen(PlayerListener);
+    conns->doDisconnect(c);
 
     return 0;
 
@@ -261,6 +262,7 @@ int testConnectionSocketendListen()
         return 1;
 
     conns->endListen(PlayerListener);
+    conns->doDisconnect(c);
 
     //if((c = conns->doConnect("localhost", 1022)))
     //    return 1;
@@ -320,6 +322,9 @@ int testSendAndReceive()
     {
         return 1;
     }
+
+    conns->endListen(PlayerListener);
+    conns->doDisconnect(c);
 
     return 0;
 }
