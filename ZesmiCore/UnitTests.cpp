@@ -19,11 +19,12 @@ int testVectorAddAssign();
 int testInitialize();
 int testConnectionSocketListen();
 int testSelect();
-int testConnectionSocketConnect(); bool testHandler(Packet *p);
+int testConnectionSocketConnect(); bool testHandler(Packet *p, Connection *sender);
 int testConnectionSocketendListen();
 int testSendAndReceive();
 int testRoutePackets();
-int testRespondFromHandler(); bool testRespondHandler(Packet *p);
+int testRespondFromHandler(); bool testRespondHandler(Packet *p, Connection *sender);
+int testAllPackets(); bool testAllHandler(Packet *p, Connection *sender);
 int testDeinitialize();
 
 
@@ -42,6 +43,7 @@ static fn tests[] = {
     testSendAndReceive,
     testRoutePackets,
     testRespondFromHandler,
+    testAllPackets,
     testDeinitialize,
     NULL
 
@@ -60,6 +62,7 @@ char *testnames[] = {
     "Testing send and receive of packets",
     "Test routing packets to a basic handler",
     "Test responding from a handler",
+    "Test all packets",
     "Test Deinitialization"
 };
 
@@ -164,7 +167,7 @@ int testInitialize()
 
 bool testHandler(Packet *p, Connection *sender)
 {
-    if(!p)
+    if(!p || !sender)
         return false;
     if(p->PacketID < 0)
     {
@@ -354,7 +357,7 @@ int testRoutePackets()
 
 bool testRespondHandler(Packet *p, Connection *sender)
 {
-    if(!p)
+    if(!p || !sender)
         return false;
     if(p->PacketID < 0)
     {
@@ -368,10 +371,10 @@ bool testRespondHandler(Packet *p, Connection *sender)
 
     if(p->PacketID == P_KEEPALIVE)
     {
-        HandShake *t = new HandShake;
-        t->PacketID = P_HANDSHAKE;
-        strcpy(t->Username, "Zeffrin");
-        sender->SendPacket((Packet*)t);
+        HandShake t;
+        t.PacketID = P_HANDSHAKE;
+        strcpy(t.Username, "Zeffrin");
+        sender->SendPacket((Packet*)&t);
     }
     return true;
 
@@ -416,6 +419,71 @@ int testRespondFromHandler()
     conns->endListen(PlayerListener);
     conns->doDisconnect(c);
 
+    return 0;
+}
+
+bool testAllHandler(Packet *p, Connection *sender)
+{
+    if(!p || !sender)
+        return false;
+    if(p->PacketID < 0 || p->PacketID > PACKETCOUNT)
+    {
+        return false;
+    }
+
+    switch(p->PacketID)
+    {
+        case P_KEEPALIVE:       return true;
+    }
+    return false;
+}
+
+int testAllPackets()
+{
+    ConnectionController *conns = ConnectionController::getInstance();
+    PacketHandler handler = testAllHandler;
+    Connection *PlayerListener;
+    Connection *c;
+
+    if(!(PlayerListener = conns->doListen("1022", handler)))
+        return 1;
+
+    if(!(c = conns->doConnect("localhost", 1022, handler)))
+        return 1;
+
+    conns->doSelect(); // must do select before can do anything else
+
+    while(conns->doAccept() == 0) conns->doSelect();
+
+    for(unsigned int i = 0; i < PACKETCOUNT ; i++)
+    {
+
+        Packet *p;
+        bool unknown = false;
+
+        switch(i)
+        {
+            case P_KEEPALIVE:
+                KeepAlive p;
+                p.PacketID = P_KEEPALIVE;
+                c->SendPacket((Packet*)&p);
+                break;
+            default:
+                unknown = true;
+                break;
+        }
+        if(unknown)
+            return 1;
+
+        conns->doSelect();
+        while(conns->doRecv() < 1) { conns->doSelect();}
+        if(conns->doRouting() != 1)
+        {
+            return 1;
+        }
+    }
+    conns->endListen(PlayerListener);
+    conns->doDisconnect(c);
     return 0;
 }
 

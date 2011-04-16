@@ -57,7 +57,8 @@ typedef enum {
     P_PACKET103,
     P_PACKET104,
     P_PACKET105,
-    P_PACKET106      // TODO go up to 255 for kick/dc
+    P_PACKET106,
+    PACKETCOUNT    // TODO go up to 255 for kick/dc
 } PacketType;
 
 
