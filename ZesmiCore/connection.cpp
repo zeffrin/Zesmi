@@ -254,7 +254,38 @@ int Connection::doRecv()
             cp += sizeof(HandShakePacket);
             p = (Packet*)t;
             break;
-
+        }
+        case P_CHAT:
+        {
+            ChatPacket *t = new ChatPacket;
+            // TODO if args from sscanf ...
+            t->PacketID = *cp;
+            sscanf(cp+1, "%s", t->Message);
+            i -= sizeof(ChatPacket);
+            cp += sizeof(ChatPacket);
+            p = (Packet*)t;
+            break;
+        }
+        case P_UPDATETIME:
+        {
+            UpdateTimePacket *t = new UpdateTimePacket;
+            //TODO sscanf..
+            t->PacketID = *cp;
+            sscanf(cp+1, "%ld", &(t->Time));
+            i -= sizeof(UpdateTimePacket);
+            cp += sizeof(UpdateTimePacket);
+            p = (Packet*)t;
+            break;
+        }
+        case P_PLAYERINVENTORY:
+        {
+            PlayerInventoryPacket *t = new PlayerInventoryPacket;
+            t->PacketID = *cp;
+            sscanf(cp+1, "%d%d%d%d", &(t->EntityID), &(t->Slot), &(t->ItemID), &(t->ItemDamage));
+            i -= sizeof(PlayerInventoryPacket);
+            cp += sizeof(UpdateTimePacket);
+            p = (Packet*)t;
+            break;
         }
         case P_PLAYERLOOKMOVE:
         {

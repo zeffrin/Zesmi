@@ -433,7 +433,13 @@ bool testAllHandler(Packet *p, Connection *sender)
 
     switch(p->PacketID)
     {
-        case P_KEEPALIVE:       return true;
+        case P_KEEPALIVE: { return true; }
+        case P_HANDSHAKE:
+        {
+            if(strcmp(((HandShakePacket*)p)->Username, "Zeffrin") == 0)
+                return true;
+            break;
+        }
     }
     return false;
 }
