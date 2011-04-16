@@ -77,6 +77,14 @@ void ConnectionController::endListen(Connection *conn)
     delete conn;
 }
 
+bool ConnectionController::doDisconnect(Connection *conn)
+{
+    _connections.remove(conn);
+    FD_CLR(conn->getSocket(), &_fd_master);
+    delete conn;
+    return true;
+}
+
 bool ConnectionController::doSelect()
 {
     list<Connection*>::iterator it;

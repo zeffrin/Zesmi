@@ -20,6 +20,7 @@ class ConnectionController
         Connection* doListen(char *port, PacketHandler handler);
         void endListen(Connection *conn);
         Connection* doConnect(char *host, int port, PacketHandler handler);
+        bool doDisconnect(Connection *conn);
         bool doSelect();
         int doAccept();
         void doSend();
