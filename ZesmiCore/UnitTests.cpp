@@ -21,7 +21,9 @@ int testConnectionSocketListen();
 int testSelect();
 int testConnectionSocketConnect();
 int testConnectionSocketendListen();
+int testSendAndReceive();
 int testDeinitialize();
+
 
 typedef int (*fn)();
 
@@ -36,6 +38,7 @@ static fn tests[] = {
     testSelect,
     testConnectionSocketConnect,
     testConnectionSocketendListen,
+    testSendAndReceive,
     testDeinitialize,
     NULL
 
@@ -51,6 +54,7 @@ char *testnames[] = {
     "Test select doesn't error with listen sockets",
     "Test connecting to a socket",
     "Test closing a listening socket",
+    "Testing send and receive of packets",
     "Test Deinitialization"
 };
 
@@ -211,10 +215,6 @@ int testConnectionSocketConnect()
         return 1;
 
     conns->doSelect(); // must do select before can do anything else
-
-    KeepAlive p;
-    p.PacketID = P_KEEPALIVE;
-
     while(conns->doAccept() == 0) {
         //c->SendPacket((Packet*)&p);
         conns->doSelect(); }
@@ -259,6 +259,46 @@ int testConnectionSocketendListen()
 
     return 0;
 
+}
+
+int testSendAndReceive()
+{
+    ConnectionController *conns = ConnectionController::getInstance();
+    Initialize *init = Initialize::getInstance();
+    Connection *PlayerListener;
+    Connection *c;
+
+    if(!(PlayerListener = conns->doListen("1022")))
+        return 1;
+
+    if(!(c = conns->doConnect("localhost", 1022)))
+        return 1;
+
+    conns->doSelect(); // must do select before can do anything else
+
+    while(conns->doAccept() == 0)
+    {
+        //c->SendPacket((Packet*)&p);
+        conns->doSelect();
+    }
+
+    KeepAlive p;
+    p.PacketID = P_KEEPALIVE;
+
+    c->SendPacket((Packet*)&p);
+    conns->doSelect();
+    while(conns->doRecv() < 1) { conns->doSelect();}
+
+
+    HandShake h;
+    h.PacketID = P_HANDSHAKE;
+    strcpy(h.Username, "Zeffrin");
+
+    c->SendPacket((Packet*)&h);
+    conns->doSelect();
+    while(conns->doRecv() < 1) { conns->doSelect();}
+
+    return 0;
 }
 
 int testDeinitialize()
