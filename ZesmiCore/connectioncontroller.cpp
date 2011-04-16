@@ -136,11 +136,12 @@ int ConnectionController::doAccept()
     return r;
 }
 
-void ConnectionController::doRecv()
+int ConnectionController::doRecv()
 {
     list<Connection*>::iterator it;
     list<Connection*> tbd;
 
+    int received = 0;
 
     //Connection *c = NULL;
     for ( it = _connections.begin() ; it != _connections.end() ; it++ )
@@ -149,7 +150,12 @@ void ConnectionController::doRecv()
         {
             if(!(*it)->doRecv())
             {
+                // Handle closing sockets
                 tbd.push_back(*it);
+            }
+            else
+            {
+                received++;
             }
         }
     }
@@ -159,5 +165,7 @@ void ConnectionController::doRecv()
         _connections.remove(*it);
         delete *it;
     }
+
+    return received;
 }
 

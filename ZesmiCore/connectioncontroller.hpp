@@ -23,7 +23,7 @@ class ConnectionController
         bool doSelect();
         int doAccept();
         void doSend();
-        void doRecv();
+        int doRecv();
         void doError();
         void doRouting();
 
