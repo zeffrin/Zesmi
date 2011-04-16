@@ -51,9 +51,6 @@ Connection::Connection(char *hostname, int port, PacketHandler handler)
     }
     if (connect(sock, (LPSOCKADDR)&addr, sizeof(addr)) == SOCKET_ERROR)
     {
-
-        int error = WSAGetLastError();
-
         sock = NULL;
         _connstate = CONNERROR;
         return;
@@ -304,7 +301,10 @@ int Connection::doRouting()
     {
         it = inMessages.front();
         if(_handlePacket(it, this)) i++;
-        inMessages.pop_front();
+        {
+            inMessages.pop_front();
+            delete it;
+        }
     }
     return i;
 }
