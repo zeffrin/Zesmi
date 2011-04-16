@@ -36,7 +36,7 @@ Connection::Connection(char *hostname, int port, PacketHandler handler)
     SOCKADDR_IN addr;
     addr.sin_family     = AF_INET;
     addr.sin_port       = htons(port);
-    if ((addr.sin_addr.s_addr = inet_addr(hostname)) == -1)
+    if ((addr.sin_addr.s_addr = inet_addr(hostname)) == (unsigned)-1)
     {
         struct hostent *hs;
         if ((hs = gethostbyname(hostname)) == NULL)
@@ -302,12 +302,14 @@ bool Connection::doRecv()
 
 int Connection::doRouting()
 {
-    list<Packet*>::iterator it;
-    int i;
+    Packet* it;
+    int i = 0;
 
-    for( it = inMessages.begin() ; it != inMessages.end() ; it++ )
+    while(!inMessages.empty())
     {
-        _handlePacket(*it);
+        it = inMessages.front();
+        inMessages.pop_front();
+        _handlePacket(it);
         i++;
     }
     return i;
