@@ -17,16 +17,15 @@ class ConnectionController
     public:
 
         static ConnectionController *getInstance();
-        Connection* doListen(char *port);
+        Connection* doListen(char *port, PacketHandler handler);
         void endListen(Connection *conn);
-        Connection* doConnect(char *host, int port);
+        Connection* doConnect(char *host, int port, PacketHandler handler);
         bool doSelect();
         int doAccept();
         void doSend();
         int doRecv();
+        int doRouting();
         void doError();
-        void doRouting();
-
         ~ConnectionController();
 
     protected:

@@ -9,12 +9,21 @@ Connection::Connection()
 
     sock = NULL;
     _connstate = ACCEPTING;
+    _handlePacket = NULL;
 
 }
 
-Connection::Connection(char *hostname, int port)
+Connection::Connection(char *hostname, int port, PacketHandler handler)
 {
 
+    if(!handler)
+    {
+        _connstate = CONNERROR;
+        sock = NULL;
+        _handlePacket = NULL;
+        return;
+    }
+    _handlePacket = handler;
     sock = INVALID_SOCKET;
     sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (sock == INVALID_SOCKET)
@@ -53,10 +62,9 @@ Connection::Connection(char *hostname, int port)
     ioctlsocket(sock, FIONBIO,&iMode);
 
     _connstate = OPEN;
-
 }
 
-Connection::Connection(char *port)
+Connection::Connection(char *port, PacketHandler handler)
 {
     // listen socket
 
@@ -67,6 +75,12 @@ Connection::Connection(char *port)
 #elif defined _WIN32 || defined _WIN64
 
     _connstate = NEW;
+    if(!handler)
+    {
+        _connstate = CONNERROR;
+        return;
+    }
+    _handlePacket = handler;
 
     struct addrinfo *result = NULL, hints;  // unused variable from msdn *ptr = NULL;
 
@@ -121,13 +135,14 @@ Connection::Connection(char *port)
 
 }
 
-Connection::Connection(SOCKET s)
+Connection::Connection(SOCKET s, PacketHandler handler)
 {
     //For use accepting connections
     sock = s;
     u_long iMode=1;
     ioctlsocket(sock, FIONBIO,&iMode);
     _connstate = OPEN;
+    _handlePacket = handler;
 }
 
 Connection::~Connection()
@@ -145,6 +160,7 @@ Connection::~Connection()
         _connstate = CLOSED;
 
     }
+    _handlePacket = NULL;
 
 }
 
@@ -182,7 +198,7 @@ Connection* Connection::doAccept()
         }
     }
     _connstate = OPEN;
-    Connection *r = new Connection(t);
+    Connection *r = new Connection(t, _handlePacket);
     return r;
 
 }
@@ -278,19 +294,26 @@ bool Connection::doRecv()
             inMessages.push_back(p);
         }
 
-
         // TODO store left over peices back in sockbuf
-
-
-
     }
 
     return true;
-
-
 }
 
-bool Connection::SendPacket(const Packet *p) // TODO Make PacketType enum right, and have a matching size array
+int Connection::doRouting()
+{
+    list<Packet*>::iterator it;
+    int i;
+
+    for( it = inMessages.begin() ; it != inMessages.end() ; it++ )
+    {
+        _handlePacket(*it);
+        i++;
+    }
+    return i;
+}
+
+bool Connection::SendPacket(const Packet *p)
 {
     char buf[1092];
     switch(p->PacketID)

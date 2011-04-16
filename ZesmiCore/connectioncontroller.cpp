@@ -38,9 +38,13 @@ ConnectionController* ConnectionController::getInstance()
 
 }
 
-Connection* ConnectionController::doConnect(char *hostname, int port)
+Connection* ConnectionController::doConnect(char *hostname, int port, PacketHandler handler)
 {
-    Connection *c = new Connection(hostname, port);
+    if(!handler)
+    {
+        return NULL;
+    }
+    Connection *c = new Connection(hostname, port, handler);
     if(!c->getSocket())
     {
         return NULL;
@@ -50,9 +54,13 @@ Connection* ConnectionController::doConnect(char *hostname, int port)
     return c;
 }
 
-Connection* ConnectionController::doListen(char *port)
+Connection* ConnectionController::doListen(char *port, PacketHandler handler)
 {
-    Connection *c = new Connection(port);
+    if(!handler)
+    {
+        return NULL;
+    }
+    Connection *c = new Connection(port, handler);
     if(c->getState() != LISTEN)
     {
         return NULL;
@@ -169,3 +177,14 @@ int ConnectionController::doRecv()
     return received;
 }
 
+int ConnectionController::doRouting()
+{
+    list<Connection*>::iterator it;
+    int i = 0;
+
+    for ( it = _connections.begin() ; it != _connections.end() ; it++ )
+    {
+        i += (*it)->doRouting();
+    }
+    return i;
+}
