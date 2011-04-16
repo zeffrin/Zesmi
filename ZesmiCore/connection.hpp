@@ -58,7 +58,7 @@ class Connection
         int  doRouting();
         //void send(const Block *block);
         bool SendPacket(const Packet *packet);
-        bool doRecv();
+        int doRecv();
 
         bool isListener();
         ConnectionState getState();

@@ -205,11 +205,12 @@ Connection* Connection::doAccept()
 
 }
 
-bool Connection::doRecv()
+int Connection::doRecv()
 {
     char buf[RECV_BUF];
     char *cp;
     bool goagain = true;
+    bool unknown = false;
 
     int j = strlen(_sockbuf);
     if(j > 0) {
@@ -218,12 +219,12 @@ bool Connection::doRecv()
     buf[i] = '\0';
     cp = buf;
     if(i <= 0)
-        return false;
+        return -1;
 
     char packetid;
-    sscanf(_sockbuf, "%c", &packetid);
+    sscanf(buf, "%c", &packetid);
     char tmp[30];
-    sprintf(tmp, "Received packet: %d\n", packetid);
+    sprintf(tmp, "Received packet: %c\n", packetid);
 
     Packet *p = NULL;
     switch(packetid)
@@ -274,6 +275,7 @@ bool Connection::doRecv()
             cp = NULL;
             goagain = false;
             p = NULL;
+            unknown = true;
             break;
         }
     }
@@ -283,13 +285,13 @@ bool Connection::doRecv()
     else
         *_sockbuf = '\0';
 
-    if(p)
+    if(!unknown)
     {
         inMessages.push_back(p);
+        return 1;
     }
+    return 0;
 
-
-    return true;
 }
 
 int Connection::doRouting()
@@ -301,8 +303,7 @@ int Connection::doRouting()
     {
         it = inMessages.front();
         inMessages.pop_front();
-        _handlePacket(it);
-        i++;
+        if(_handlePacket(it)) i++;
     }
     return i;
 }

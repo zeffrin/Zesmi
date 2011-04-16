@@ -158,21 +158,19 @@ int ConnectionController::doRecv()
     list<Connection*> tbd;
 
     int received = 0;
+    int i;
 
     //Connection *c = NULL;
     for ( it = _connections.begin() ; it != _connections.end() ; it++ )
     {
         if(FD_ISSET((*it)->getSocket(), &_fd_readyforrecv))
         {
-            if(!(*it)->doRecv())
-            {
-                // Handle closing sockets
+            if((i = (*it)->doRecv()) < 0)
                 tbd.push_back(*it);
-            }
+            else if(i==0)
+                continue;
             else
-            {
                 received++;
-            }
         }
     }
     for ( it = tbd.begin() ; it != tbd.end() ; it ++ )
