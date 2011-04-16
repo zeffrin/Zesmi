@@ -206,7 +206,6 @@ int Connection::doRecv()
 {
     char buf[RECV_BUF];
     char *cp;
-    bool goagain = true;
     bool unknown = false;
 
     int j = strlen(_sockbuf);
@@ -302,7 +301,6 @@ int Connection::doRecv()
             *_sockbuf = '\0';  // TODO unknown packet should cause disconnect
             i = 0;
             cp = NULL;
-            goagain = false;
             p = NULL;
             unknown = true;
             break;
