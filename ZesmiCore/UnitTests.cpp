@@ -316,6 +316,11 @@ int testSendAndReceive()
     conns->doSelect();
     while(conns->doRecv() < 1) { conns->doSelect();}
 
+    if(conns->doRouting() != 2)
+    {
+        return 1;
+    }
+
     return 0;
 }
 
