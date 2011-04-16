@@ -221,8 +221,7 @@ int Connection::doRecv()
     if(i <= 0)
         return -1;
 
-    char packetid;
-    sscanf(buf, "%c", &packetid);
+    int packetid = buf[0];
     char tmp[30];
     sprintf(tmp, "Received packet: %c\n", packetid);
 
@@ -231,10 +230,11 @@ int Connection::doRecv()
     {
         case P_KEEPALIVE:
         {
-            KeepAlive k;
-            k.PacketID = 0;
+            KeepAlive *t = new KeepAlive;
+            t->PacketID = 0;
             i -= sizeof(KeepAlive);
             cp += sizeof(KeepAlive);
+            p = (Packet*)t;
             break;
         }
         case P_LOGIN:
@@ -251,8 +251,9 @@ int Connection::doRecv()
         {
             HandShake *t = new HandShake;
             // TODO if args from sscanf correct bla if not bla
-            sscanf(cp, "%c%s", &(t->PacketID), t->Username);
-            i -= sizeof(HandShake);
+            t->PacketID = *cp;
+            sscanf(cp + 1, "%s", t->Username);
+            i -= sizeof(HandShake) + 1; // TODO Find out why this one is +1 and get rid of DIRTY magic number
             cp += sizeof(HandShake);
             p = (Packet*)t;
             break;
@@ -302,8 +303,8 @@ int Connection::doRouting()
     while(!inMessages.empty())
     {
         it = inMessages.front();
-        inMessages.pop_front();
         if(_handlePacket(it)) i++;
+        inMessages.pop_front();
     }
     return i;
 }
