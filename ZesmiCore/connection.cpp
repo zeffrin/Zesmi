@@ -227,42 +227,42 @@ int Connection::doRecv()
     {
         case P_KEEPALIVE:
         {
-            KeepAlive *t = new KeepAlive;
+            KeepAlivePacket *t = new KeepAlivePacket;
             t->PacketID = 0;
-            i -= sizeof(KeepAlive);
-            cp += sizeof(KeepAlive);
+            i -= sizeof(KeepAlivePacket);
+            cp += sizeof(KeepAlivePacket);
             p = (Packet*)t;
             break;
         }
         case P_LOGIN:
         {
-            Login *t = new Login;
+            LoginPacket *t = new LoginPacket;
             // TODO if args from sscanf correct bla if not bla
             sscanf(cp,"%c%d%64s%64s%ld%c", &(t->PacketID), &(t->ProtocolVersion),t->Username, t->VerificationKey, &(t->MapSeed), &(t->Dimension));
-            i -= sizeof(Login);
-            cp += sizeof(Login);
+            i -= sizeof(LoginPacket);
+            cp += sizeof(LoginPacket);
             p = (Packet*)t;
             break;
         }
         case P_HANDSHAKE:
         {
-            HandShake *t = new HandShake;
+            HandShakePacket *t = new HandShakePacket;
             // TODO if args from sscanf correct bla if not bla
             t->PacketID = *cp;
             sscanf(cp + 1, "%s", t->Username);
-            i -= sizeof(HandShake) + 1; // TODO Find out why this one is +1 and get rid of DIRTY magic number
-            cp += sizeof(HandShake);
+            i -= sizeof(HandShakePacket) + 1; // TODO Find out why this one is +1 and get rid of DIRTY magic number
+            cp += sizeof(HandShakePacket);
             p = (Packet*)t;
             break;
 
         }
         case P_PLAYERLOOKMOVE:
         {
-            PlayerLookMove *t = new PlayerLookMove;
+            PlayerLookMovePacket *t = new PlayerLookMovePacket;
             // TODO if args from sscanf correct bla if not bla
             sscanf(cp, "%c%lf%lf%lf%lf%f%f", &(t->PacketID), &(t->X), &(t->Y), &(t->Stance), &(t->Z), &(t->Yaw), &(t->Pitch) );
-            i -= sizeof(PlayerLookMove);
-            cp += sizeof(HandShake);
+            i -= sizeof(PlayerLookMovePacket);
+            cp += sizeof(PlayerLookMovePacket);
             p = (Packet*)t;
             break;
         }
@@ -318,8 +318,8 @@ bool Connection::SendPacket(const Packet *p)
             *buf = '\0';
             break;
         case P_HANDSHAKE:
-            HandShake *t;
-            t = (HandShake*)p;
+            HandShakePacket *t;
+            t = (HandShakePacket*)p;
             sprintf(buf, "%c%-64s", t->PacketID, t->Username);
             break;
         default:

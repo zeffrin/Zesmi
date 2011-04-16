@@ -176,7 +176,7 @@ bool testHandler(Packet *p, Connection *sender)
     if(p->PacketID != P_KEEPALIVE && p->PacketID != P_HANDSHAKE)
         return false;
 
-    if(p->PacketID == P_HANDSHAKE && strcmp(((HandShake*)p)->Username, "Zeffrin") != 0 )
+    if(p->PacketID == P_HANDSHAKE && strcmp(((HandShakePacket*)p)->Username, "Zeffrin") != 0 )
         return false;
 
     return true;
@@ -291,7 +291,7 @@ int testSendAndReceive()
 
     while(conns->doAccept() == 0) conns->doSelect();
 
-    KeepAlive p;
+    KeepAlivePacket p;
     p.PacketID = P_KEEPALIVE;
 
     c->SendPacket((Packet*)&p);
@@ -299,7 +299,7 @@ int testSendAndReceive()
     while(conns->doRecv() < 1) conns->doSelect();
 
 
-    HandShake h;
+    HandShakePacket h;
     h.PacketID = P_HANDSHAKE;
     strcpy(h.Username, "Zeffrin");
 
@@ -330,7 +330,7 @@ int testRoutePackets()
 
     while(conns->doAccept() == 0) conns->doSelect();
 
-    KeepAlive p;
+    KeepAlivePacket p;
     p.PacketID = P_KEEPALIVE;
 
     c->SendPacket((Packet*)&p);
@@ -338,7 +338,7 @@ int testRoutePackets()
     while(conns->doRecv() < 1) conns->doSelect();
 
 
-    HandShake h;
+    HandShakePacket h;
     h.PacketID = P_HANDSHAKE;
     strcpy(h.Username, "Zeffrin");
 
@@ -366,12 +366,12 @@ bool testRespondHandler(Packet *p, Connection *sender)
     if(p->PacketID != P_KEEPALIVE && p->PacketID != P_HANDSHAKE)
         return false;
 
-    if(p->PacketID == P_HANDSHAKE && strcmp(((HandShake*)p)->Username, "Zeffrin") != 0 )
+    if(p->PacketID == P_HANDSHAKE && strcmp(((HandShakePacket*)p)->Username, "Zeffrin") != 0 )
         return false;
 
     if(p->PacketID == P_KEEPALIVE)
     {
-        HandShake t;
+        HandShakePacket t;
         t.PacketID = P_HANDSHAKE;
         strcpy(t.Username, "Zeffrin");
         sender->SendPacket((Packet*)&t);
@@ -397,7 +397,7 @@ int testRespondFromHandler()
 
     while(conns->doAccept() == 0) conns->doSelect();
 
-    KeepAlive p;
+    KeepAlivePacket p;
     p.PacketID = P_KEEPALIVE;
 
     c->SendPacket((Packet*)&p);
@@ -457,14 +457,12 @@ int testAllPackets()
 
     for(unsigned int i = 0; i < PACKETCOUNT ; i++)
     {
-
-        Packet *p;
         bool unknown = false;
 
         switch(i)
         {
             case P_KEEPALIVE:
-                KeepAlive p;
+                KeepAlivePacket p;
                 p.PacketID = P_KEEPALIVE;
                 c->SendPacket((Packet*)&p);
                 break;
