@@ -303,7 +303,7 @@ int Connection::doRouting()
     while(!inMessages.empty())
     {
         it = inMessages.front();
-        if(_handlePacket(it)) i++;
+        if(_handlePacket(it, this)) i++;
         inMessages.pop_front();
     }
     return i;

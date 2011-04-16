@@ -19,10 +19,11 @@ int testVectorAddAssign();
 int testInitialize();
 int testConnectionSocketListen();
 int testSelect();
-int testConnectionSocketConnect();
+int testConnectionSocketConnect(); bool testHandler(Packet *p);
 int testConnectionSocketendListen();
 int testSendAndReceive();
 int testRoutePackets();
+int testRespondFromHandler(); bool testRespondHandler(Packet *p);
 int testDeinitialize();
 
 
@@ -41,6 +42,7 @@ static fn tests[] = {
     testConnectionSocketendListen,
     testSendAndReceive,
     testRoutePackets,
+    testRespondFromHandler,
     testDeinitialize,
     NULL
 
@@ -58,6 +60,7 @@ char *testnames[] = {
     "Test closing a listening socket",
     "Testing send and receive of packets",
     "Test routing packets to a basic handler",
+    "Test responding from a handler",
     "Test Deinitialization"
 };
 
@@ -164,7 +167,7 @@ int testInitialize()
         return 0;
 }
 
-bool testHandler(Packet *p)
+bool testHandler(Packet *p, Connection *sender)
 {
     if(!p)
         return false;
@@ -319,7 +322,7 @@ int testSendAndReceive()
 
 int testRoutePackets()
 {
-        ConnectionController *conns = ConnectionController::getInstance();
+    ConnectionController *conns = ConnectionController::getInstance();
     Initialize *init = Initialize::getInstance();
     PacketHandler handler = testHandler;
     Connection *PlayerListener;
@@ -362,6 +365,75 @@ int testRoutePackets()
     return 0;
 }
 
+bool testRespondHandler(Packet *p, Connection *sender)
+{
+    ConnectionController *conns = ConnectionController::getInstance();
+    if(!p)
+        return false;
+    if(p->PacketID < 0)
+    {
+        return false;
+    }
+    if(p->PacketID != P_KEEPALIVE && p->PacketID != P_HANDSHAKE)
+        return false;
+
+    if(p->PacketID == P_HANDSHAKE && strcmp(((HandShake*)p)->Username, "Zeffrin") != 0 )
+        return false;
+
+    if(p->PacketID == P_KEEPALIVE)
+    {
+        HandShake *t = new HandShake;
+        t->PacketID = P_HANDSHAKE;
+        strcpy(t->Username, "Zeffrin");
+        sender->SendPacket((Packet*)t);
+    }
+    return true;
+
+}
+
+int testRespondFromHandler()
+{
+    ConnectionController *conns = ConnectionController::getInstance();
+    Initialize *init = Initialize::getInstance();
+    PacketHandler handler = testRespondHandler;
+    Connection *PlayerListener;
+    Connection *c;
+
+    if(!(PlayerListener = conns->doListen("1022", handler)))
+        return 1;
+
+    if(!(c = conns->doConnect("localhost", 1022, handler)))
+        return 1;
+
+    conns->doSelect(); // must do select before can do anything else
+
+    while(conns->doAccept() == 0) conns->doSelect();
+
+    KeepAlive p;
+    p.PacketID = P_KEEPALIVE;
+
+    c->SendPacket((Packet*)&p);
+    conns->doSelect();
+    while(conns->doRecv() < 1) { conns->doSelect();}
+
+    if(conns->doRouting() != 1)
+    {
+        return 1;
+    }
+    // Handshake has been sent from handler
+    while(conns->doRecv() < 1) { conns->doSelect();}
+
+    if(conns->doRouting() != 1)
+    {
+        return 1;
+    }
+
+    conns->endListen(PlayerListener);
+    conns->doDisconnect(c);
+
+    return 0;
+}
+
 int testDeinitialize()
 {
     ConnectionController *conns = ConnectionController::getInstance();
@@ -370,7 +442,6 @@ int testDeinitialize()
     delete init;
     return 0;
 }
-
 
 // TODO fix this test to be listen and connect test
 /*

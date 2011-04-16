@@ -42,7 +42,9 @@ typedef enum cs
     CONNERROR
 } ConnectionState;
 
-typedef bool (*PacketHandler)(Packet *);
+class Connection;
+
+typedef bool (*PacketHandler)(Packet *, Connection *);
 
 class Connection
 {
