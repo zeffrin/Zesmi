@@ -2,7 +2,7 @@
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Test" />
 	<File name="UnitTests.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="2091" topLine="76" />
+		<Cursor position="7284" topLine="290" />
 	</File>
 	<File name="block.cpp" open="0" top="0" tabpos="6">
 		<Cursor position="95" topLine="0" />
@@ -13,17 +13,17 @@
 	<File name="configuration.hpp" open="0" top="0" tabpos="7">
 		<Cursor position="74" topLine="0" />
 	</File>
-	<File name="connection.cpp" open="1" top="1" tabpos="4">
-		<Cursor position="467" topLine="25" />
+	<File name="connection.cpp" open="1" top="0" tabpos="4">
+		<Cursor position="5862" topLine="290" />
 	</File>
 	<File name="connection.hpp" open="1" top="0" tabpos="8">
-		<Cursor position="282" topLine="0" />
+		<Cursor position="1180" topLine="44" />
 	</File>
-	<File name="connectioncontroller.cpp" open="1" top="0" tabpos="3">
-		<Cursor position="1084" topLine="25" />
+	<File name="connectioncontroller.cpp" open="1" top="1" tabpos="3">
+		<Cursor position="3575" topLine="148" />
 	</File>
 	<File name="connectioncontroller.hpp" open="1" top="0" tabpos="2">
-		<Cursor position="588" topLine="0" />
+		<Cursor position="659" topLine="2" />
 	</File>
 	<File name="entity.cpp" open="1" top="0" tabpos="7">
 		<Cursor position="427" topLine="1" />
@@ -36,5 +36,11 @@
 	</File>
 	<File name="living.hpp" open="0" top="0" tabpos="9">
 		<Cursor position="83" topLine="0" />
+	</File>
+	<File name="packet.cpp" open="1" top="0" tabpos="9">
+		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="packet.hpp" open="1" top="0" tabpos="10">
+		<Cursor position="349" topLine="63" />
 	</File>
 </CodeBlocks_layout_file>

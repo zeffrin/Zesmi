@@ -172,13 +172,12 @@ bool testHandler(Packet *p)
     {
         return false;
     }
-    if(p->PacketID != P_KEEPALIVE || p->PacketID != P_HANDSHAKE)
+    if(p->PacketID != P_KEEPALIVE && p->PacketID != P_HANDSHAKE)
         return false;
 
     if(p->PacketID == P_HANDSHAKE && strcmp(((HandShake*)p)->Username, "Zeffrin") != 0 )
         return false;
 
-    printf("Bossmode\n");
     return true;
 }
 
