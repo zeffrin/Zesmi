@@ -161,14 +161,28 @@ int testInitialize()
         return 0;
 }
 
+bool testHandler(Packet *p)
+{
+    if(!p)
+    {
+        return false;
+    }
+    if(p->PacketID < 0)
+    {
+        return false;
+    }
+    return true;
+}
+
 int testConnectionSocketListen()
 {
     Initialize *init = Initialize::getInstance();
     ConnectionController *conns = ConnectionController::getInstance();
     Connection *PlayerListener;
+    PacketHandler handler = testHandler;
     bool result;
 
-    if((PlayerListener = conns->doListen("1022")))
+    if((PlayerListener = conns->doListen("1022", handler)))
         result = true;
     else
         result = false;
@@ -187,7 +201,8 @@ int testSelect()
     Initialize *init = Initialize::getInstance();
     ConnectionController *conns = ConnectionController::getInstance();
     Connection *PlayerListener;
-    if(!(PlayerListener = conns->doListen("1022")))
+    PacketHandler handler = testHandler;
+    if(!(PlayerListener = conns->doListen("1022", handler)))
         return 1;
 
     /* Blocks when working so...
@@ -205,13 +220,14 @@ int testConnectionSocketConnect()
 {
     Initialize *init = Initialize::getInstance();
     ConnectionController *conns = ConnectionController::getInstance();
+        PacketHandler handler = testHandler;
     Connection *PlayerListener;
     Connection *c;
 
-    if(!(PlayerListener = conns->doListen("1022")))
+    if(!(PlayerListener = conns->doListen("1022", handler)))
         return 1;
 
-    if(!(c = conns->doConnect("localhost", 1022)))
+    if(!(c = conns->doConnect("localhost", 1022, handler)))
         return 1;
 
     conns->doSelect(); // must do select before can do anything else
@@ -229,13 +245,14 @@ int testConnectionSocketendListen()
 {
     Initialize *init = Initialize::getInstance();
     ConnectionController *conns = ConnectionController::getInstance();
+    PacketHandler handler = testHandler;
     Connection *PlayerListener;
     Connection *c;
 
-    if(!(PlayerListener = conns->doListen("1022")))
+    if(!(PlayerListener = conns->doListen("1022", handler)))
         return 1;
 
-    if(!(c = conns->doConnect("localhost", 1022)))
+    if(!(c = conns->doConnect("localhost", 1022, handler)))
         return 1;
 
     conns->doSelect();  // must do select before can do anything else
@@ -265,13 +282,14 @@ int testSendAndReceive()
 {
     ConnectionController *conns = ConnectionController::getInstance();
     Initialize *init = Initialize::getInstance();
+    PacketHandler handler = testHandler;
     Connection *PlayerListener;
     Connection *c;
 
-    if(!(PlayerListener = conns->doListen("1022")))
+    if(!(PlayerListener = conns->doListen("1022", handler)))
         return 1;
 
-    if(!(c = conns->doConnect("localhost", 1022)))
+    if(!(c = conns->doConnect("localhost", 1022, handler)))
         return 1;
 
     conns->doSelect(); // must do select before can do anything else
