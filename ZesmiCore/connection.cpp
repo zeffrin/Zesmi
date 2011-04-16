@@ -10,12 +10,13 @@ Connection::Connection()
     sock = NULL;
     _connstate = ACCEPTING;
     _handlePacket = NULL;
+    *_sockbuf = '\0';
 
 }
 
 Connection::Connection(char *hostname, int port, PacketHandler handler)
 {
-
+    *_sockbuf = '\0';
     if(!handler)
     {
         _connstate = CONNERROR;
@@ -73,7 +74,7 @@ Connection::Connection(char *port, PacketHandler handler)
 #elif defined __linux__
     #error "TODO sockets for linux"
 #elif defined _WIN32 || defined _WIN64
-
+    *_sockbuf = '\0';
     _connstate = NEW;
     if(!handler)
     {
@@ -141,6 +142,7 @@ Connection::Connection(SOCKET s, PacketHandler handler)
     sock = s;
     u_long iMode=1;
     ioctlsocket(sock, FIONBIO,&iMode);
+    *_sockbuf = '\0';
     _connstate = OPEN;
     _handlePacket = handler;
 }
@@ -205,97 +207,87 @@ Connection* Connection::doAccept()
 
 bool Connection::doRecv()
 {
-    #define RECV_BUF 256 // TODO put this somewhere better
-
     char buf[RECV_BUF];
     char *cp;
-
     bool goagain = true;
 
+    int j = strlen(_sockbuf);
+    if(j > 0) {
+       strncpy(buf, _sockbuf, j); }
+    int i = recv(sock, buf, RECV_BUF - (1 + j), 0);
+    buf[i] = '\0';
+    cp = buf;
+    if(i <= 0)
+        return false;
 
-    while(goagain)
+    char packetid;
+    sscanf(_sockbuf, "%c", &packetid);
+    char tmp[30];
+    sprintf(tmp, "Received packet: %d\n", packetid);
+
+    Packet *p = NULL;
+    switch(packetid)
     {
-        int i = recv(sock, buf, RECV_BUF - 1, 0);
-        if ( i > RECV_BUF )
+        case P_KEEPALIVE:
         {
-            i = RECV_BUF;
-            goagain = true;
+            KeepAlive k;
+            k.PacketID = 0;
+            i -= sizeof(KeepAlive);
+            cp += sizeof(KeepAlive);
+            break;
         }
-        else
+        case P_LOGIN:
         {
+            Login *t = new Login;
+            // TODO if args from sscanf correct bla if not bla
+            sscanf(cp,"%c%d%64s%64s%ld%c", &(t->PacketID), &(t->ProtocolVersion),t->Username, t->VerificationKey, &(t->MapSeed), &(t->Dimension));
+            i -= sizeof(Login);
+            cp += sizeof(Login);
+            p = (Packet*)t;
+            break;
+        }
+        case P_HANDSHAKE:
+        {
+            HandShake *t = new HandShake;
+            // TODO if args from sscanf correct bla if not bla
+            sscanf(cp, "%c%s", &(t->PacketID), t->Username);
+            i -= sizeof(HandShake);
+            cp += sizeof(HandShake);
+            p = (Packet*)t;
+            break;
+
+        }
+        case P_PLAYERLOOKMOVE:
+        {
+            PlayerLookMove *t = new PlayerLookMove;
+            // TODO if args from sscanf correct bla if not bla
+            sscanf(cp, "%c%lf%lf%lf%lf%f%f", &(t->PacketID), &(t->X), &(t->Y), &(t->Stance), &(t->Z), &(t->Yaw), &(t->Pitch) );
+            i -= sizeof(PlayerLookMove);
+            cp += sizeof(HandShake);
+            p = (Packet*)t;
+            break;
+        }
+        default:
+        {
+            *_sockbuf = '\0';  // TODO unknown packet should cause disconnect
+            i = 0;
+            cp = NULL;
             goagain = false;
+            p = NULL;
+            break;
         }
-        if(i <= 0)
-        {
-            goagain = false;
-            return false;
-        }
-        strncat(_sockbuf, buf, i);
-
-        // Get Packet ID
-        char packetid;
-        sscanf(_sockbuf, "%c", &packetid);
-        cp = _sockbuf;  // set cp to position in sockbuf
-
-
-        char tmp[30];
-        sprintf(tmp, "Received packet: %d\n", packetid);
-
-        //TODO will want to loop through buffer and leave remainder somewhere
-        Packet *p = NULL;
-
-        switch(packetid)
-        {
-            case P_KEEPALIVE:
-            {
-                KeepAlive k;
-                k.PacketID = 0;
-                SendPacket((Packet*)&k); // TODO remove testing, packets should be handled in consumer processes
-                break;
-            }
-            case P_LOGIN:
-            {
-                Login *t = new Login;
-                // TODO if args from sscanf correct bla if not bla
-                sscanf(cp,"%c%d%64s%64s%ld%c", &(t->PacketID), &(t->ProtocolVersion),t->Username, t->VerificationKey, &(t->MapSeed), &(t->Dimension));
-                cp += sizeof(Login);
-                p = (Packet*)t;
-                break;
-            }
-            case P_HANDSHAKE:
-            {
-                HandShake *t = new HandShake;
-                // TODO if args from sscanf correct bla if not bla
-                sscanf(cp, "%c%s", &(t->PacketID), t->Username);
-                cp += sizeof(HandShake);
-                p = (Packet*)t;
-                break;
-
-            }
-            case P_PLAYERLOOKMOVE:
-            {
-                PlayerLookMove *t = new PlayerLookMove;
-                // TODO if args from sscanf correct bla if not bla
-                sscanf(cp, "%c%lf%lf%lf%lf%f%f", &(t->PacketID), &(t->X), &(t->Y), &(t->Stance), &(t->Z), &(t->Yaw), &(t->Pitch) );
-                cp += sizeof(PlayerLookMove);
-                p = (Packet*)t;
-                break;
-            }
-            default:
-            {
-                *_sockbuf = '\0';  // TODO unknown packet should cause disconnect
-                p = NULL;
-                break;
-            }
-        }
-
-        if(p)
-        {
-            inMessages.push_back(p);
-        }
-
-        // TODO store left over peices back in sockbuf
     }
+
+    if(i > 0)
+        strncpy(_sockbuf, cp, i);
+    else
+        *_sockbuf = '\0';
+
+    if(p)
+    {
+        inMessages.push_back(p);
+    }
+
 
     return true;
 }

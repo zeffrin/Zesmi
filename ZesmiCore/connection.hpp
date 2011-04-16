@@ -28,6 +28,7 @@
 #include "block.hpp"
 #include "packet.hpp"
 
+#define RECV_BUF 2048 // TODO put this somewhere better
 
 using namespace std;
 
@@ -83,7 +84,7 @@ class Connection
 
         PacketHandler _handlePacket;
 
-        char _sockbuf[1092]; // large enough to hold any packet
+        char _sockbuf[RECV_BUF]; // large enough to hold any packet
 
 };
 
