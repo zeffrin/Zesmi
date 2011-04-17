@@ -434,6 +434,20 @@ bool testAllHandler(Packet *p, Connection *sender)
     switch(p->PacketID)
     {
         case P_KEEPALIVE: { return true; }
+        case P_LOGIN:
+        {
+            LoginPacket *t = (LoginPacket*)p;
+            if(t->PacketID == P_LOGIN &&
+               t->ProtocolVersion == 15 &&
+               strcmp(t->)Username, "Zeffrin") == 0 &&
+               strcmp(t->VerificationKey, "-") == 0 &&
+               t->MapSeed == 101 &&
+               t->Dimension == 5)
+            {
+               return true;
+            }
+            break;
+        }
         case P_HANDSHAKE:
         {
             if(strcmp(((HandShakePacket*)p)->Username, "Zeffrin") == 0)
@@ -472,6 +486,16 @@ int testAllPackets()
                 p.PacketID = P_KEEPALIVE;
                 c->SendPacket((Packet*)&p);
                 break;
+            case P_LOGIN:
+                LoginPacket p;
+                p.PacketID = P_HANDSHAKE;
+                p.ProtocolVersion = 15;
+                strcpy(p.Username, "Zeffrin");
+                strcpy(p.VerificationKey, "-");
+                p.MapSeed = "101";
+                p.Dimension = 5;
+
+
             default:
                 unknown = true;
                 break;
