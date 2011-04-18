@@ -28,6 +28,7 @@
 #include "block.hpp"
 #include "packet.hpp"
 
+#define RECV_BUF 2048 // TODO put this somewhere better
 
 using namespace std;
 
@@ -41,20 +42,25 @@ typedef enum cs
     CONNERROR
 } ConnectionState;
 
+class Connection;
+
+typedef bool (*PacketHandler)(Packet *, Connection *);
+
 class Connection
 {
     public:
         Connection(); // for handling incoming connections
-        Connection(char *port);  //for tcp listening
+        Connection(char *port, PacketHandler handler);  //for tcp listening
         //Connection(char *pipename); // connect named pipe
-        Connection(char *hostname, int port); // connect tcp
-        Connection(SOCKET s); // for accepting connections
+        Connection(char *hostname, int port, PacketHandler handler); // connect tcp
+        Connection(SOCKET s, PacketHandler handler); // for accepting connections
         ~Connection();
 
         Connection *doAccept();
+        int  doRouting();
         //void send(const Block *block);
         bool SendPacket(const Packet *packet);
-        bool doRecv();
+        int doRecv();
 
         bool isListener();
         ConnectionState getState();
@@ -78,7 +84,9 @@ class Connection
         list<Packet*> inMessages;  //into server
         list<Packet*> outMessages; // out of server
 
-        char _sockbuf[1092]; // large enough to hold any packet
+        PacketHandler _handlePacket;
+
+        char _sockbuf[RECV_BUF]; // large enough to hold any packet
 
 };
 

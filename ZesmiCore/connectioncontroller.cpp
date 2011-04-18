@@ -38,9 +38,13 @@ ConnectionController* ConnectionController::getInstance()
 
 }
 
-Connection* ConnectionController::doConnect(char *hostname, int port)
+Connection* ConnectionController::doConnect(char *hostname, int port, PacketHandler handler)
 {
-    Connection *c = new Connection(hostname, port);
+    if(!handler)
+    {
+        return NULL;
+    }
+    Connection *c = new Connection(hostname, port, handler);
     if(!c->getSocket())
     {
         return NULL;
@@ -50,9 +54,13 @@ Connection* ConnectionController::doConnect(char *hostname, int port)
     return c;
 }
 
-Connection* ConnectionController::doListen(char *port)
+Connection* ConnectionController::doListen(char *port, PacketHandler handler)
 {
-    Connection *c = new Connection(port);
+    if(!handler)
+    {
+        return NULL;
+    }
+    Connection *c = new Connection(port, handler);
     if(c->getState() != LISTEN)
     {
         return NULL;
@@ -69,6 +77,14 @@ void ConnectionController::endListen(Connection *conn)
     delete conn;
 }
 
+bool ConnectionController::doDisconnect(Connection *conn)
+{
+    _connections.remove(conn);
+    FD_CLR(conn->getSocket(), &_fd_master);
+    delete conn;
+    return true;
+}
+
 bool ConnectionController::doSelect()
 {
     list<Connection*>::iterator it;
@@ -78,7 +94,7 @@ bool ConnectionController::doSelect()
     FD_ZERO(&_fd_error);
 
     _fd_readyforrecv = _fd_master;
-    _fd_readyforsend = _fd_master;
+    //_fd_readyforsend = _fd_master;  // This should be outbound connections in progress
     _fd_error = _fd_master;
 
     // TODO fdmax is ignored according to msdn, but it fixed my trouble before I think
@@ -136,21 +152,25 @@ int ConnectionController::doAccept()
     return r;
 }
 
-void ConnectionController::doRecv()
+int ConnectionController::doRecv()
 {
     list<Connection*>::iterator it;
     list<Connection*> tbd;
 
+    int received = 0;
+    int i;
 
     //Connection *c = NULL;
     for ( it = _connections.begin() ; it != _connections.end() ; it++ )
     {
         if(FD_ISSET((*it)->getSocket(), &_fd_readyforrecv))
         {
-            if(!(*it)->doRecv())
-            {
+            if((i = (*it)->doRecv()) < 0)
                 tbd.push_back(*it);
-            }
+            else if(i==0)
+                continue;
+            else
+                received++;
         }
     }
     for ( it = tbd.begin() ; it != tbd.end() ; it ++ )
@@ -159,5 +179,18 @@ void ConnectionController::doRecv()
         _connections.remove(*it);
         delete *it;
     }
+
+    return received;
 }
 
+int ConnectionController::doRouting()
+{
+    list<Connection*>::iterator it;
+    int i = 0;
+
+    for ( it = _connections.begin() ; it != _connections.end() ; it++ )
+    {
+        i += (*it)->doRouting();
+    }
+    return i;
+}
