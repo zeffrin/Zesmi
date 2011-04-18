@@ -217,14 +217,11 @@ int Connection::doRecv()
     if(i <= 0)
         return -1;
 
-    int packetid = buf[0];
-    char tmp[30];
-    sprintf(tmp, "Received packet: %c\n", packetid);
-
     Packet *p = NULL;
+    int packetid = buf[0];
     switch(packetid)
     {
-        case P_KEEPALIVE:
+        case P_KEEPALIVE: // TODO handle endianess
         {
             KeepAlivePacket *t = new KeepAlivePacket;
             t->PacketID = 0;
@@ -237,7 +234,7 @@ int Connection::doRecv()
         {
             LoginPacket *t = new LoginPacket;
             // TODO if args from sscanf correct bla if not bla
-            sscanf(cp,"%c%d%64s%64s%ld%c", &(t->PacketID), &(t->ProtocolVersion),t->Username, t->VerificationKey, &(t->MapSeed), &(t->Dimension));
+            sscanf(cp,"%c%hd%64s%64s%ld%c", &(t->PacketID), &(t->ProtocolVersion),t->Username, t->VerificationKey, &(t->MapSeed), &(t->Dimension));
             i -= sizeof(LoginPacket);
             cp += sizeof(LoginPacket);
             p = (Packet*)t;
@@ -280,7 +277,7 @@ int Connection::doRecv()
         {
             PlayerInventoryPacket *t = new PlayerInventoryPacket;
             t->PacketID = *cp;
-            sscanf(cp+1, "%d%d%d%d", &(t->EntityID), &(t->Slot), &(t->ItemID), &(t->ItemDamage));
+            sscanf(cp+1, "%d%hd%hd%hd", &(t->EntityID), &(t->Slot), &(t->ItemID), &(t->ItemDamage));
             i -= sizeof(PlayerInventoryPacket);
             cp += sizeof(UpdateTimePacket);
             p = (Packet*)t;
@@ -343,7 +340,7 @@ bool Connection::SendPacket(const Packet *p)
     char buf[1092];
     switch(p->PacketID)
     {
-        case P_KEEPALIVE:
+        case P_KEEPALIVE: // TODO handle endianess
             *buf = '\0';
             break;
         case P_HANDSHAKE:
