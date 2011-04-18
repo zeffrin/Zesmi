@@ -94,7 +94,7 @@ bool ConnectionController::doSelect()
     FD_ZERO(&_fd_error);
 
     _fd_readyforrecv = _fd_master;
-    _fd_readyforsend = _fd_master;
+    //_fd_readyforsend = _fd_master;  // This should be outbound connections in progress
     _fd_error = _fd_master;
 
     // TODO fdmax is ignored according to msdn, but it fixed my trouble before I think
