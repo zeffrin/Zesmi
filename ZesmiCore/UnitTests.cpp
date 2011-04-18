@@ -81,7 +81,7 @@ int main(void)
         return 1;
     }
 
-    int i;
+    int i, passed = 0;
     for(i = 0; tests[i] != NULL; i++)
     {
         printf("%s\n", testnames[i]);
@@ -94,15 +94,15 @@ int main(void)
         if(!error)
         {
             printf("Passed in %f seconds.\n\n", teT);
+            passed++;
         }
         else
         {
             printf("FAILED in %f seconds.\n\n", teT);
-            break;
         }
     }
 
-    printf ("\n%d of %d tests completed successfully in %f seconds.\n", i, (int)(sizeof(testnames) / sizeof(char*)), elapsedTime);
+    printf ("%d of %d tests completed successfully in %f seconds.\n", passed, i, elapsedTime);
     printf("Press enter to finish\n");
     fscanf(stdin, "%c", &c);
 }
@@ -439,7 +439,7 @@ bool testAllHandler(Packet *p, Connection *sender)
             LoginPacket *t = (LoginPacket*)p;
             if(t->PacketID == P_LOGIN &&
                t->ProtocolVersion == 15 &&
-               strcmp(t->)Username, "Zeffrin") == 0 &&
+               strcmp(t->Username, "Zeffrin") == 0 &&
                strcmp(t->VerificationKey, "-") == 0 &&
                t->MapSeed == 101 &&
                t->Dimension == 5)
@@ -487,15 +487,15 @@ int testAllPackets()
                 c->SendPacket((Packet*)&p);
                 break;
             case P_LOGIN:
-                LoginPacket p;
-                p.PacketID = P_HANDSHAKE;
-                p.ProtocolVersion = 15;
-                strcpy(p.Username, "Zeffrin");
-                strcpy(p.VerificationKey, "-");
-                p.MapSeed = "101";
-                p.Dimension = 5;
-
-
+                LoginPacket p2;
+                p2.PacketID = P_HANDSHAKE;
+                p2.ProtocolVersion = 15;
+                strcpy(p2.Username, "Zeffrin");
+                strcpy(p2.VerificationKey, "-");
+                p2.MapSeed = 101;
+                p2.Dimension = 5;
+                c->SendPacket((Packet*)&p);
+                break;
             default:
                 unknown = true;
                 break;
