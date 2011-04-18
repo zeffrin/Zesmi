@@ -98,7 +98,7 @@ typedef struct
 typedef struct
 {
     byte PacketID;
-    char *Message;
+    char Message[64];
 } ChatPacket;
 
 typedef struct
