@@ -256,7 +256,7 @@ int Connection::doRecv()
             ChatPacket *t = new ChatPacket;
             // TODO if args from sscanf ...
             t->PacketID = *cp;
-            sscanf(cp+1, "%s", t->Message);
+            sscanf(cp+1, "%64s", t->Message);
             i -= sizeof(ChatPacket);
             cp += sizeof(ChatPacket);
             p = (Packet*)t;
