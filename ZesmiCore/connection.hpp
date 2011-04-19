@@ -87,7 +87,7 @@ class Connection
         PacketHandler _handlePacket;
 
         char _sockbuf[RECV_BUF]; // large enough to hold any packet
-
+        int _sockbuflen;
 };
 
 #endif // CONNECTION_HPP_INCLUDED
