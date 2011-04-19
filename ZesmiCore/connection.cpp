@@ -344,130 +344,180 @@ bool Connection::SendPacket(const Packet *p)  // TODO rolling out this many poin
             *buf = '\0';
             break;
         case P_LOGIN:
+        {
             LoginPacket *t;
             t = (LoginPacket*)p;
             sprintf(buf, "%c%hd%-64s%-64s%ld%c", t->PacketID, t->ProtocolVersion, t->Username, t->VerificationKey, t->MapSeed, t->Dimension);
             break;
+        }
         case P_HANDSHAKE:
+        {
             HandShakePacket *t2;
             t2 = (HandShakePacket*)p;
             sprintf(buf, "%c%-64s", t2->PacketID, t2->Username);
             break;
+        }
         case P_CHAT:
+        {
             ChatPacket *t3;
             t3 = (ChatPacket*)p;
             sprintf(buf, "%c%-64s", t3->PacketID, t3->Message);
             break;
+        }
         case P_UPDATETIME:
+        {
             UpdateTimePacket *t4;
             t4 = (UpdateTimePacket*)p;
             sprintf(buf, "%c%ld", t4->PacketID, t4->Time);
             break;
+        }
         case P_PLAYERINVENTORY:
+        {
             PlayerInventoryPacket *t5;
             t5 = (PlayerInventoryPacket*)p;
             sprintf(buf, "%c%d%hd%hd%hd", t5->PacketID, t5->EntityID, t5->Slot, t5->ItemID, t5->ItemDamage);
             break;
+        }
         case P_SPAWNPOSITION:
+        {
             SpawnPositionPacket *t6;
             t6 = (SpawnPositionPacket*)p;
             sprintf(buf, "%c%d%d%d", t6->PacketID, t6->X, t6->Y, t6->Z);
             break;
+        }
         case P_ACTION:
+        {
             ActionPacket *t7;
             t7 = (ActionPacket*)p;
             sprintf(buf, "%c%d%d%c", t7->PacketID, t7->PlayerEntity, t7->TargetEntity, t7->IsLeftClick);
             break;
+        }
         case P_HEALTH:
+        {
             HealthPacket *t8;
             t8 = (HealthPacket*)p;
             sprintf(buf, "%c%hd", t8->PacketID, t8->Health);
             break;
+        }
         case P_RESPAWN:
+        {
             RespawnPacket *t9;
             t9 = (RespawnPacket*)p;
             sprintf(buf, "%c", t9->PacketID);
             break;
+        }
         case P_FLYING:
+        {
             FlyingPacket *t10;
             t10 = (FlyingPacket*)p;
             sprintf(buf, "%c%d", t10->PacketID, t10->Flying);
             break;
+        }
         case P_PLAYERPOSITION:
+        {
             PlayerPositionPacket *t11;
             t11 = (PlayerPositionPacket*)p;
             sprintf(buf, "%c%lf%lf%lf%lf%d", t11->PacketID, t11->X, t11->Y, t11->Stance, t11->Z, t11->Flying);
             break;
+        }
         case P_PLAYERLOOK:
+        {
             PlayerLookPacket *t12;
             t12 = (PlayerLookPacket*)p;
             sprintf(buf, "%c%f%f%d", t12->PacketID, t12->Yaw, t12->Pitch, t12->Flying);
             break;
+        }
         case P_PLAYERLOOKMOVE:
+        {
             PlayerLookMovePacket *t13;
             t13 = (PlayerLookMovePacket*)p;
             sprintf(buf, "%c%lf%lf%lf%lf%f%f%d", t13->PacketID, t13->X, t13->Y, t13->Stance, t13->Z, t13->Yaw, t13->Pitch, t13->Flying);
             break;
+        }
         case P_BLOCKDIG:
+        {
             BlockDigPacket *t14;
             t14 = (BlockDigPacket*)p;
             sprintf(buf, "%c%d%d%d%d%d", t14->PacketID, t14->Status, t14->X, t14->Y, t14->Z, t14->Face);
             break;
+        }
         case P_PLACE:
+        {
             PlacePacket *t15;
             t15 = (PlacePacket*)p;
             sprintf(buf, "%c%d%d%d%d%hd%c%hd", t15->PacketID, t15->X, t15->Y, t15->Z, t15->Direction, t15->ItemID, t15->StackSize, t15->ItemDamage);
             break;
+        }
         case P_BLOCKITEMSWITCH:
+        {
             BlockItemSwitchPacket *t16;
             t16 = (BlockItemSwitchPacket*)p;
             sprintf(buf, "%c%hd", t16->PacketID, t16->ID);
             break;
+        }
         case P_SLEEP:
+        {
             SleepPacket *t17;
             t17 = (SleepPacket*)p;
             sprintf(buf, "%c%d%c%d%c%d", t17->PacketID, t17->EntityID, t17->field_22042_e, t17->field_22040_b, t17->field_22044_c, t17->field_22043_d);
             break;
+        }
         case P_ARMANIMATION:
+        {
             ArmAnimationPacket *t18;
             t18 = (ArmAnimationPacket*)p;
             sprintf(buf, "%c%d%c", t18->PacketID, t18->EntityID, t18->Animate);
             break;
+        }
         case P_PACKET19:
+        {
             P19Packet *t19;
             t19 = (P19Packet*)p;
             sprintf(buf, "%c%d%c", t19->PacketID, t19->EntityID, t19->State);
             break;
+        }
         case P_NAMEDENTITYSPAWN:
+        {
             NamedEntitySpawnPacket *t20;
             t20 = (NamedEntitySpawnPacket*)p;
             sprintf(buf, "%c%d%-64s%d%d%d%c%c%hd", t20->PacketID, t20->EntityID, t20->Name, t20->X, t20->Y, t20->Z, t20->Rotation, t20->Pitch, t20->CurrentItem);
             break;
+        }
         case P_PICKUPSPAWN:
+        {
             PickupSpawnPacket *t21;
             t21 = (PickupSpawnPacket*)p;
             sprintf(buf, "%c%d%hd%c%hd%d%d%d%c%c%c", t21->PacketID, t21->EntityID, t21->ItemID, t21->Count, t21->ItemDamage, t21->X, t21->Y, t21->Z, t21->Rotation, t21->Pitch, t21->Roll);
             break;
+        }
         case P_COLLECT:
+        {
             CollectPacket *t22;
             t22 = (CollectPacket*)p;
             sprintf(buf, "%c%d%d", t22->PacketID, t22->CollectedEntityID, t22->CollectorEntityID);
             break;
+        }
         case P_VEHICLESPAWN:
+        {
             VehicleSpawnPacket *t23;
             t23 = (VehicleSpawnPacket*)p;
             sprintf(buf, "%c%d%c%d%d%d", t23->PacketID, t23->EntityID, t23->Type, t23->X, t23->Y, t23->Z);
             break;
+        }
         case P_MOBSPAWN:
+        {
             MobSpawnPacket *t24;
             t24 = (MobSpawnPacket*)p;
             sprintf(buf, "%c%d%c%d%d%d%c%c", t24->PacketID, t24->EntityID, t24->Type, t24->X, t24->Y, t24->Z, t24->Yaw, t24->Pitch);
             break;
+        }
         case P_TITLE:
+        {
             TitlePacket *t25;
             t25 = (TitlePacket*)p;
             sprintf(buf, "%c%-64s%d%d%d%d", t25->PacketID, t25->Title, t25->X, t25->Y, t25->Z, t25->Direction);
             break;
+        }
         default:
             *buf = '\0';
             return false;
