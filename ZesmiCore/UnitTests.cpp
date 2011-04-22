@@ -260,10 +260,7 @@ int testConnectionSocketendListen()
     if(!(c = conns->doConnect("localhost", 1022, handler)))
         return 1;
 
-    conns->doSelect();  // must do select before can do anything else
-
-    if (!(conns->doAccept()))
-        return 1;
+    while(!(conns->doSelect()));  // must do select before can do anything else
 
     conns->endListen(PlayerListener);
     conns->doDisconnect(c);
