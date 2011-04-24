@@ -37,6 +37,7 @@ class ConnectionController
 
         list<Connection*> _connections;
         list<Connection*> _listenconns;
+        list<Connection*> _selectme;
 
         fd_set _fd_master;
 

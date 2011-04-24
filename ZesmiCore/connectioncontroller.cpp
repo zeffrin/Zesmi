@@ -92,13 +92,35 @@ bool ConnectionController::doSelect()
     FD_ZERO(&_fd_readyforrecv);
     FD_ZERO(&_fd_readyforsend);
     FD_ZERO(&_fd_error);
+    int i = 0;
 
     _fd_readyforrecv = _fd_master;
     //_fd_readyforsend = _fd_master;  // This should be outbound connections in progress
     _fd_error = _fd_master;
 
-    // TODO fdmax is ignored according to msdn, but it fixed my trouble before I think
-    int result = select(NULL, &_fd_readyforrecv, &_fd_readyforsend, &_fd_error, NULL);
+    for ( it = _selectme.begin() ; it != _selectme.end() ; it++ )
+    {
+        FD_CLR((*it)->getSocket(), &_fd_readyforrecv);
+        i++;
+    }
+    timeval tv;
+    tv.tv_sec = 0;
+    tv.tv_usec = 0;
+    int result = 0;
+    if(i > 0)
+    {
+        result = select(NULL, &_fd_readyforrecv, &_fd_readyforsend, &_fd_error, &tv);
+    }
+    else
+    {
+        result = select(NULL, &_fd_readyforrecv, &_fd_readyforsend, &_fd_error, NULL);
+    }
+
+    for ( it = _selectme.begin() ; it != _selectme.end() ; it++ )
+    {
+        FD_SET((*it)->getSocket(), &_fd_readyforrecv);
+        result++;
+    }
     if(!result || result == SOCKET_ERROR || result == -1)
     {
 #if DEBUG
@@ -106,6 +128,8 @@ bool ConnectionController::doSelect()
 #endif
         return false;
     }
+
+    _selectme.clear();
     return true;
 
 }
@@ -170,7 +194,10 @@ int ConnectionController::doRecv()
             else if(i==0)
                 continue;
             else
+            {
                 received++;
+                if(i>1) _selectme.push_back(*it);
+            }
         }
     }
     for ( it = tbd.begin() ; it != tbd.end() ; it ++ )
