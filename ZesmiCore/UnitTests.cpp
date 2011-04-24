@@ -14,8 +14,20 @@
 using namespace std;
 
 int testHighResolutionTimer();
+int testVectorEquality();
+int testVectorInEquality();
 int testVectorAssignment();
+int testVectorAddition();
 int testVectorAddAssign();
+int testVectorSubtract();
+int testVectorSubAssign();
+int testPositionEquality();
+int testPositionInEquality();
+int testPositionAssignment();
+int testPositionAddition();
+int testPositionAddAssign();
+int testPositionSubtract();
+int testPositionSubAssign();
 int testInitialize();
 int testConnectionSocketListen();
 int testSelect();
@@ -33,8 +45,20 @@ typedef int (*fn)();
 static fn tests[] = {
     // List tests here, if tests depend on some other functionality put them afterward
     testHighResolutionTimer,
+    testVectorEquality,
+    testVectorInEquality,
     testVectorAssignment,
+    testVectorAddition,
     testVectorAddAssign,
+    testVectorSubtract,
+    testVectorSubAssign,
+    testPositionEquality,
+    testPositionInEquality,
+    testPositionAssignment,
+    testPositionAddition,
+    testPositionAddAssign,
+    testPositionSubtract,
+    testPositionSubAssign,
     testInitialize,
     testConnectionSocketListen,
     testSelect,
@@ -52,8 +76,20 @@ static fn tests[] = {
 char *testnames[] = {
     // And here as strings
     "Test high resolution timer used for unittesting",
+    "Test == overload for Vector class",
+    "Test != overload for Vector class",
     "Test = overload for Vector class",
+    "Test + overload for Vector class",
     "Test += overload for Vector class",
+    "Test - overload for Vector class",
+    "Test -= overload for Vector class",
+    "Test == overrload for Position class",
+    "Test != overload for Position class",
+    "Test = overload for Position class",
+    "Test + overload for Position class",
+    "Test += overload for Position class",
+    "Test - overload for Position class",
+    "Test -= overload for Position class",
     "Test Initialization",
     "Test Opening a listening tcp socket",
     "Test select doesn't error with listen sockets",
@@ -114,6 +150,44 @@ int testHighResolutionTimer()
     return 0;
 }
 
+int testVectorEquality()
+{
+    Vector a;
+    Vector b;
+
+    a.X = 1.0f;
+    a.Y = 1.0f;
+    a.Z = 1.0f;
+    a.Pitch = 1.0f;
+    a.Yaw = 1.0f;
+    b.X = 1.0f;
+    b.Y = 1.0f;
+    b.Z = 1.0f;
+    b.Pitch = 1.0f;
+    b.Yaw = 1.0f;
+    return (!(a==b));
+}
+
+int testVectorInEquality()
+{
+    Vector a;
+    Vector b;
+
+    a.X = 1.0f;
+    a.Y = 1.0f;
+    a.Z = 1.0f;
+    a.Pitch = 1.0f;
+    a.Yaw = 1.0f;
+
+    b.X = 2.0f;
+    b.Y = 2.0f;
+    b.Z = 2.0f;
+    b.Pitch = 1.0f;
+    b.Yaw = 1.0f;
+
+    return (!(a!=b));
+}
+
 int testVectorAssignment()
 {
     Vector a;
@@ -127,17 +201,45 @@ int testVectorAssignment()
 
     b = a;
 
-    if (b.X != 1.0f || b.Y != 2.0f || b.Z != 3.0f || b.Pitch != 3.0f || b.Yaw != 3.0f)
+    if (a!=b)
     {
         return 1;
     }
     return 0;
 }
 
+
+int testVectorAddition()
+{
+    Vector a;
+    Vector b;
+
+    a.X = 1.0f;
+    a.Y = 1.5f;
+    a.Z = 2.0f;
+    a.Pitch = 1.0f;
+    a.Yaw = 2.0f;
+
+    b.X = 2.0f;
+    b.Y = 3.0f;
+    b.Z = 4.0f;
+    b.Pitch = 2.0f;
+    b.Yaw = 4.0f;
+
+    a = a + a;
+    if(a == b)
+    {
+        return 0;
+    }
+
+    return 1;
+}
+
 int testVectorAddAssign()
 {
     Vector a;
     Vector b;
+
 
     a.X = 1.0f;
     a.Y = 1.0f;
@@ -148,12 +250,208 @@ int testVectorAddAssign()
     b = a;
     b += a;
 
-    if(b.X != 2.0f || b.Y != 2.0f || b.Z != 2.0f || b.Pitch != 2.0f || b.Yaw != 2.0f)
+    a.X = 2.0f;
+    a.Y = 2.0f;
+    a.Z = 2.0f;
+    a.Pitch = 2.0f;
+    a.Yaw = 2.0f;
+
+    if(a!=b)
     {
         return 1;
     }
     return 0;
 }
+
+int testVectorSubtract()
+{
+    Vector a;
+    Vector b;
+
+    a.X = 1.0f;
+    a.Y = 1.5f;
+    a.Z = 2.0f;
+    a.Pitch = 1.0f;
+    a.Yaw = 2.0f;
+
+    b.X = 2.0f;
+    b.Y = 3.0f;
+    b.Z = 4.0f;
+    b.Pitch = 2.0f;
+    b.Yaw = 4.0f;
+
+    b = b - a;
+    if(a == b)
+    {
+        return 0;
+    }
+
+    return 1;
+}
+
+int testVectorSubAssign()
+{
+    Vector a;
+    Vector b;
+
+    a.X = 1.0f;
+    a.Y = 1.5f;
+    a.Z = 2.0f;
+    a.Pitch = 1.5f;
+    a.Yaw = 2.5f;
+
+    b.X = 2.0f;
+    b.Y = 3.0f;
+    b.Z = 4.0f;
+    b.Pitch = 3.0f;
+    b.Yaw = 5.0f;
+
+    b -= a;
+
+    if(a == b)
+    {
+        return 0;
+    }
+
+    return 1;
+}
+
+int testPositionEquality()
+{
+    Position a;
+    Position b;
+
+    a.X = 1.0f;
+    a.Y = 1.0f;
+    a.Z = 1.0f;
+    b.X = 1.0f;
+    b.Y = 1.0f;
+    b.Z = 1.0f;
+    return (!(a==b));
+}
+int testPositionInEquality()
+{
+    Position a;
+    Position b;
+
+    a.X = 1.0f;
+    a.Y = 1.0f;
+    a.Z = 1.0f;
+
+    b.X = 2.0f;
+    b.Y = 2.0f;
+    b.Z = 2.0f;
+
+    return (!(a!=b));
+}
+int testPositionAssignment()
+{
+    Position a;
+    Position b;
+
+    a.X = 1.0f;
+    a.Y = 2.0f;
+    a.Z = 3.0f;
+
+    b = a;
+
+    if (a!=b)
+    {
+        return 1;
+    }
+    return 0;
+}
+int testPositionAddition()
+{
+    Position a;
+    Position b;
+
+    a.X = 1.0f;
+    a.Y = 1.5f;
+    a.Z = 2.0f;
+
+    b.X = 2.0f;
+    b.Y = 3.0f;
+    b.Z = 4.0f;
+
+    a = a + a;
+    if(a == b)
+    {
+        return 0;
+    }
+
+    return 1;
+}
+
+int testPositionAddAssign()
+{
+    Position a;
+    Position b;
+
+
+    a.X = 1.0f;
+    a.Y = 1.0f;
+    a.Z = 1.0f;
+
+    b = a;
+    b += a;
+
+    a.X = 2.0f;
+    a.Y = 2.0f;
+    a.Z = 2.0f;
+
+    if(a!=b)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+int testPositionSubtract()
+{
+    Position a;
+    Position b;
+
+    a.X = 1.0f;
+    a.Y = 1.5f;
+    a.Z = 2.0f;
+
+    b.X = 2.0f;
+    b.Y = 3.0f;
+    b.Z = 4.0f;
+
+    b = b - a;
+    if(a == b)
+    {
+        return 0;
+    }
+
+    return 1;
+}
+
+int testPositionSubAssign()
+{
+    Position a;
+    Position b;
+
+    a.X = 1.0f;
+    a.Y = 1.5f;
+    a.Z = 2.0f;
+
+    b.X = 2.0f;
+    b.Y = 3.0f;
+    b.Z = 4.0f;
+
+    b -= a;
+
+    if(a == b)
+    {
+        return 0;
+    }
+
+    return 1;
+}
+
 
 int testInitialize()
 {
