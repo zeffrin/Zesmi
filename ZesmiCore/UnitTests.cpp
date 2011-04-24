@@ -17,8 +17,8 @@ int testHighResolutionTimer();
 int testVectorEquality();
 int testVectorInEquality();
 int testVectorAssignment();
-int testVectorAddition();
 int testVectorAddAssign();
+int testVectorAddition();
 int testVectorSubtract();
 int testVectorSubAssign();
 int testPositionEquality();
@@ -48,8 +48,8 @@ static fn tests[] = {
     testVectorEquality,
     testVectorInEquality,
     testVectorAssignment,
-    testVectorAddition,
     testVectorAddAssign,
+    testVectorAddition,
     testVectorSubtract,
     testVectorSubAssign,
     testPositionEquality,
@@ -79,8 +79,8 @@ char *testnames[] = {
     "Test == overload for Vector class",
     "Test != overload for Vector class",
     "Test = overload for Vector class",
-    "Test + overload for Vector class",
     "Test += overload for Vector class",
+    "Test + overload for Vector class",
     "Test - overload for Vector class",
     "Test -= overload for Vector class",
     "Test == overrload for Position class",
@@ -208,33 +208,6 @@ int testVectorAssignment()
     return 0;
 }
 
-
-int testVectorAddition()
-{
-    Vector a;
-    Vector b;
-
-    a.X = 1.0f;
-    a.Y = 1.5f;
-    a.Z = 2.0f;
-    a.Pitch = 1.0f;
-    a.Yaw = 2.0f;
-
-    b.X = 2.0f;
-    b.Y = 3.0f;
-    b.Z = 4.0f;
-    b.Pitch = 2.0f;
-    b.Yaw = 4.0f;
-
-    a = a + a;
-    if(a == b)
-    {
-        return 0;
-    }
-
-    return 1;
-}
-
 int testVectorAddAssign()
 {
     Vector a;
@@ -261,6 +234,32 @@ int testVectorAddAssign()
         return 1;
     }
     return 0;
+}
+
+int testVectorAddition()
+{
+    Vector a;
+    Vector b;
+
+    a.X = 1.0f;
+    a.Y = 1.5f;
+    a.Z = 2.0f;
+    a.Pitch = 1.0f;
+    a.Yaw = 2.0f;
+
+    b.X = 2.0f;
+    b.Y = 3.0f;
+    b.Z = 4.0f;
+    b.Pitch = 2.0f;
+    b.Yaw = 4.0f;
+
+    a = a + a;
+    if(a == b)
+    {
+        return 0;
+    }
+
+    return 1;
 }
 
 int testVectorSubtract()
