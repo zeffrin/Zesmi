@@ -209,14 +209,12 @@ Connection* Connection::doAccept()
 int Connection::doRecv()
 {
     char buf[RECV_BUF];
-    bool unknown = false;
 
     if(_sockbuflen > 0) {
        strncpy(buf, _sockbuf, _sockbuflen); }
     int j = 0;
     j = recv(sock, buf, RECV_BUF - (1 + j), 0);
     int i = j;
-    //buf[i-1] = '\0';
     if(i <= 0)
         return -1;
 
@@ -224,7 +222,7 @@ int Connection::doRecv()
     int packetid = buf[0];
     switch(packetid)
     {
-        case P_KEEPALIVE: // TODO handle endianess
+        case P_KEEPALIVE: // TODO handle endianess && support protocol 11 (mc 1.5)
         {
             KeepAlivePacket *t = new KeepAlivePacket;
             t->PacketID = P_KEEPALIVE;
@@ -282,10 +280,8 @@ int Connection::doRecv()
         }
         default:
         {
-            *_sockbuf = '\0';  // TODO unknown packet should cause disconnect
             i = 0;
             p = NULL;
-            unknown = true;
             break;
         }
     }
@@ -297,12 +293,16 @@ int Connection::doRecv()
     }
 
     else
+    {
         *_sockbuf = '\0';
+        _sockbuflen = 0;
+    }
 
-    if(!unknown)
+
+    if(p)
     {
         inMessages.push_back(p);
-        return 1;
+        return 1 + _sockbuflen;
     }
     return 0;
 
